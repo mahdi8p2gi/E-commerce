@@ -8,6 +8,8 @@ import Login from "./components/Login";
 import AllProducts from "./pages/AllProducts";
 import ProductsCategory from "./pages/ProductsCategory";
 import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
+import addAddress from "./pages/addAddress";
 
 function App() {
   const location = useLocation();
@@ -28,6 +30,9 @@ function App() {
           <Route path="/products" element={<AllProducts />} />
           <Route path="/products/:category" element={<ProductsCategory />} />
           <Route path="/products/:category/:id" element={<ProductDetails />} />
+          <Route path="/Cart" element={<Cart />} />
+          <Route path="/add-address" element={<addAddress />} />
+
         </Routes>
       </div>
       {!isSellerPath && <Footer />}

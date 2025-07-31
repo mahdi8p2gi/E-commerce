@@ -8,7 +8,6 @@ export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
   const currency = process.env.REACT_APP_CURRENCY || "$";
-
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
@@ -16,10 +15,8 @@ export const AppContextProvider = ({ children }) => {
   const [showUserLogin, setShowUserLogin] = useState(false);
   const [products, setProducts] = useState([]);
   const [cartItem, setCartItem] = useState({});
-  const [searchQuery, setSearchQuery] = useState(""); // ✅ اصلاح نام تابع
-  // AppContext.js
-const [selectedCategory, setSelectedCategory] = useState("");
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   // گرفتن محصولات ساختگی (شبیه‌سازی API)
   const fetchProducts = async () => {
@@ -57,30 +54,50 @@ const [selectedCategory, setSelectedCategory] = useState("");
     }
   };
 
+  const getCartCount = () => {
+    let totalCount = 0;
+    for (const item in cartItem) {
+      totalCount += cartItem[item];
+    }
+    return totalCount;
+  };
+
+  const getCartAmount = () => {
+    let totalAmount = 0;
+    for (const item in cartItem) {
+      let itemInfo = products.find((p) => p._id === item);
+      if (itemInfo && cartItem[item] > 0) {
+        totalAmount += itemInfo.offerPrice * cartItem[item];
+      }
+    }
+    return Math.floor(totalAmount * 100) / 100;
+  };
+
   useEffect(() => {
     fetchProducts();
   }, []);
 
-const value = {
-  navigate,
-  user,
-  setUser,
-  isSeller,
-  setIsSeller,
-  showUserLogin,
-  setShowUserLogin,
-  products,
-  currency,
-  cartItem,
-  addToCart,
-  updateCartItem,
-  removeFromCart,
-  searchQuery,
-  setSearchQuery, // ✅ درست شد
-  selectedCategory,
-  setSelectedCategory,
-};
-
+  const value = {
+    navigate,
+    user,
+    setUser,
+    isSeller,
+    setIsSeller,
+    showUserLogin,
+    setShowUserLogin,
+    products,
+    currency,
+    cartItem,
+    addToCart,
+    updateCartItem,
+    removeFromCart,
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    setSelectedCategory,
+    getCartAmount,
+    getCartCount,
+  };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

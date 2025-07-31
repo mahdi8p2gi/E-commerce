@@ -6,7 +6,7 @@ import { useAppContext } from "../context/AppContext";
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const { user, setUser, setShowUserLogin, navigate , setSearchQuery , searchQuery } = useAppContext();
+  const { user, setUser, setShowUserLogin, navigate , setSearchQuery , searchQuery ,getCartCount } = useAppContext();
 
   const logout = async () => {
     setUser(null);
@@ -48,9 +48,9 @@ function Navbar() {
         </div>
 
         <div onClick={() => navigate("/cart")} className="relative">
-          <img src={assets.nav_cart_icon} alt="cart" className="w-6 opacity-80" />
+          <img src={assets.nav_cart_icon} alt="cart" className="w-6 cursor-pointer opacity-80" />
           <span className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] h-[18px] rounded-full flex items-center justify-center">
-            3
+            {getCartCount()}
           </span>
         </div>
 

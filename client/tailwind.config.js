@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}", // اطمینان از اینکه کل فایل‌ها بررسی میشن
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
