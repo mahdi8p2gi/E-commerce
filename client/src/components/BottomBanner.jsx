@@ -18,7 +18,7 @@ function BottomBanner() {
 
       {/* متن و ویژگی‌ها روی تصویر */}
       <div className="absolute inset-0 flex flex-col items-center pt-16 md:items-end md:pr-24 md:pt-0">
-        <h1 className="mt-16 text-2xl font-semibold mb-9 md:text-4xl text-primary">
+        <h1 className="mt-8 text-2xl font-semibold mb-9 md:text-4xl text-primary">
           Why We Are The Best?
         </h1>
 

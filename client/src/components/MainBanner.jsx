@@ -20,7 +20,9 @@ function MainBanner() {
 
       {/* محتوا */}
       <div className="absolute inset-0 flex flex-col items-center justify-end px-4 pb-20 md:items-start md:justify-center md:pl-24 md:pb-0">
-        <h1 className="text-3xl font-bold text-center leading-tight capitalize md:text-left md:text-5xl lg:text-6xl max-w-[90%] md:max-w-[500px] lg:max-w-[750px] lg:leading-[4rem] text-black">
+        <h1
+          className="text-3xl font-bold text-center leading-tight capitalize md:text-left md:text-5xl lg:text-6xl max-w-[90%] md:max-w-[500px] lg:max-w-[750px] lg:leading-[4rem] text-black"
+        >
           Freshness you can trust, savings you will love!
         </h1>
 
@@ -39,7 +41,7 @@ function MainBanner() {
 
           <Link
             to="/products"
-            className="flex items-center gap-2 py-3 text-black border border-black rounded px-7 hover:bg-gray-100"
+            className="flex items-center gap-2 py-3 text-black transition border border-black rounded px-7 hover:bg-gray-100"
           >
             Explore Deals
             <img

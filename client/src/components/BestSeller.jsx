@@ -13,7 +13,7 @@ function BestSeller() {
     .slice(0, 5);
 
   return (
-    <div className="px-4 mt-16 md:px-0">
+    <div className="px-4 mt-16 bg-white md:px-0">
       <p className="mb-6 text-2xl font-semibold text-gray-800 md:text-3xl">
         Best Sellers
       </p>

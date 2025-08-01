@@ -9,35 +9,37 @@ import AllProducts from "./pages/AllProducts";
 import ProductsCategory from "./pages/ProductsCategory";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
-import addAddress from "./pages/addAddress";
 
-function App() {
+
+function AppContent() {
   const location = useLocation();
   const isSellerPath = location.pathname.includes("seller");
   const { showUserLogin } = useAppContext();
 
   return (
-    <div>
+    <div className="text-black bg-white">
       {!isSellerPath && <Navbar />}
-      {showUserLogin ? <Login /> : null}
+      {showUserLogin && <Login />}
 
-      <div
-        className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}
-      >
+      <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
         <Toaster />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<AllProducts />} />
           <Route path="/products/:category" element={<ProductsCategory />} />
           <Route path="/products/:category/:id" element={<ProductDetails />} />
-          <Route path="/Cart" element={<Cart />} />
-          <Route path="/add-address" element={<addAddress />} />
-
+          <Route path="/cart" element={<Cart />} />
+          
         </Routes>
       </div>
+
       {!isSellerPath && <Footer />}
     </div>
   );
+}
+
+function App() {
+  return <AppContent />;
 }
 
 export default App;

@@ -13,7 +13,7 @@ const NewsLetter  = () => {
                     placeholder="Enter your email id"
                     required
                 />
-                <button type="submit" className="h-full px-8 text-white transition-all rounded-md rounded-l-none cursor-pointer bg-primary md:px-12 hover:bg-indigo-600">
+                <button type="submit" className="h-full px-8 text-white transition-all rounded-md rounded-l-none cursor-pointer bg-primary md:px-12 hover:bg-primary-dull">
                     Subscribe
                 </button>
             </form>

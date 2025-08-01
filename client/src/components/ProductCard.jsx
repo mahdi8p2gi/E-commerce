@@ -1,10 +1,17 @@
+import { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { assets } from '../assets/assets';
 
 const ProductCard = ({ product }) => {
   const { currency, addToCart, removeFromCart, cartItem, navigate } = useAppContext();
 
-  // اگر اطلاعات ناقص است، کارت نمایش داده نشود
+  // ⭐ امتیاز رندوم بین 1 تا 5
+  const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    setRating(Math.floor(Math.random() * 5) + 1); // عدد بین 1 تا 5
+  }, []);
+
   if (!product || !product.image || !Array.isArray(product.image) || product.image.length === 0) {
     return null;
   }
@@ -12,8 +19,7 @@ const ProductCard = ({ product }) => {
   return (
     <div
       onClick={() => {
-       navigate(`/products/${product.category}/${product._id}`);
-
+        navigate(`/products/${product.category}/${product._id}`);
         window.scrollTo(0, 0);
       }}
       className="bg-white border border-gray-200 rounded-md shadow-sm cursor-pointer p-3 w-full max-w-[220px] transition hover:shadow-md"
@@ -34,23 +40,21 @@ const ProductCard = ({ product }) => {
 
         {/* امتیاز */}
         <div className="flex items-center gap-1 mt-1">
-          {Array(5)
-            .fill('')
-            .map((_, i) => (
-              <img
-                key={i}
-                src={i < 4 ? assets.star_icon : assets.star_dull_icon}
-                alt="star"
-                className="w-4"
-              />
-            ))}
-          <p className="text-xs text-gray-500">(4)</p>
+          {Array(5).fill('').map((_, i) => (
+            <img
+              key={i}
+              src={i < rating ? assets.star_icon : assets.star_dull_icon}
+              alt="star"
+              className="w-4"
+            />
+          ))}
+          <p className="text-xs text-gray-500">({rating})</p>
         </div>
 
         {/* قیمت و دکمه‌ها */}
         <div className="flex items-center justify-between mt-3">
           <div>
-            <p className="text-sm font-semibold text-indigo-600">
+            <p className="text-sm font-semibold text-primary">
               {currency}{product.offerPrice}
               <span className="ml-2 text-xs text-gray-400 line-through">
                 {currency}{product.price}
@@ -65,16 +69,16 @@ const ProductCard = ({ product }) => {
             {!cartItem[product._id] ? (
               <button
                 onClick={() => addToCart(product._id)}
-                className="flex items-center gap-1 px-2 py-1 text-indigo-600 bg-indigo-100 border border-indigo-300 rounded-md"
+                className="flex items-center gap-1 px-2 py-1 border rounded-md bg-primary/10 border-primary/40 text-primary"
               >
                 <img src={assets.cart_icon} alt="cart-icon" className="w-4" />
                 Add
               </button>
             ) : (
-              <div className="flex items-center gap-2 px-2 py-1 bg-indigo-200 rounded-md">
+              <div className="flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10">
                 <button
                   onClick={() => removeFromCart(product._id)}
-                  className="font-bold text-indigo-800"
+                  className="font-bold text-primary"
                 >
                   −
                 </button>
@@ -83,7 +87,7 @@ const ProductCard = ({ product }) => {
                 </span>
                 <button
                   onClick={() => addToCart(product._id)}
-                  className="font-bold text-indigo-800"
+                  className="font-bold text-primary"
                 >
                   +
                 </button>
