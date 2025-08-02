@@ -9,7 +9,7 @@ import AllProducts from "./pages/AllProducts";
 import ProductsCategory from "./pages/ProductsCategory";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
-
+import ChatWidget from "./components/ChatWidget"; // 👈 اضافه کردن چت‌بات
 
 function AppContent() {
   const location = useLocation();
@@ -29,11 +29,11 @@ function AppContent() {
           <Route path="/products/:category" element={<ProductsCategory />} />
           <Route path="/products/:category/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
-          
         </Routes>
       </div>
 
       {!isSellerPath && <Footer />}
+      {!isSellerPath && <ChatWidget />} {/* 👈 نمایش چت‌بات در تمام صفحات غیر seller */}
     </div>
   );
 }

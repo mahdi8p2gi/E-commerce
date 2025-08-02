@@ -5,7 +5,7 @@ function Categories() {
   const { navigate } = useAppContext();
 
   return (
-    <div className="px-4 mt-16 bg-white md:px-8 lg:px-16">
+    <div className="mt-16 bg-white">
       <p className="mb-4 text-2xl font-semibold text-gray-800 md:text-3xl">
         Categories
       </p>

@@ -48,3 +48,53 @@ export const register = async (req, res) => {
     res.status(500).json({ success: false, message: "خطای سرور" });
   }
 };
+
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // بررسی اینکه هر دو فیلد وارد شده‌اند
+    if (!email || !password) {
+      return res.status(400).json({ message: "ایمیل و رمز عبور الزامی است" });
+    }
+
+    // پیدا کردن کاربر
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "کاربر یافت نشد" });
+    }
+
+    // مقایسه رمز عبور
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "رمز عبور اشتباه است" });
+    }
+
+    // ساخت توکن
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    // ذخیره توکن در کوکی
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        sameSite: "Lax", // اگر روی Vercel هستی بهتره این باشه
+        secure: process.env.NODE_ENV === "production", // فقط در https
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 روز
+      })
+      .status(200)
+      .json({
+        message: "ورود موفق",
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+        },
+      });
+  } catch (error) {
+    console.error("❌ خطا در ورود:", error);
+    res.status(500).json({ message: "خطای سرور در ورود" });
+  }
+};
