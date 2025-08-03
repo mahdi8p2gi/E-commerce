@@ -73,7 +73,7 @@ function Navbar() {
             onClick={() => setShowUserLogin(true)}
             className="px-8 py-2 text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary-dull"
           >
-            Login
+            Login | Sign up
           </button>
         ) : (
           <div className="relative">
@@ -107,7 +107,7 @@ function Navbar() {
                   className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                   onClick={logout}
                 >
-                  Logout
+                  Logout 
                 </li>
               </ul>
             )}
@@ -122,9 +122,9 @@ function Navbar() {
         className="sm:hidden"
       >
         <img
-          src={open ? assets.close_icon : assets.menu_icon}
+         src={user ? assets.profile_icon : assets.menu_icon}
           alt="menu"
-          className="w-6"
+          className="w-10"
         />
       </button>
 
@@ -174,7 +174,7 @@ function Navbar() {
                 }}
                 className="w-full px-6 py-2 text-sm text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary-dull"
               >
-                Login
+                Login | Sign up
               </button>
             ) : (
               <button

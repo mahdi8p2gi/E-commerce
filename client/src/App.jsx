@@ -10,6 +10,8 @@ import ProductsCategory from "./pages/ProductsCategory";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import ChatWidget from "./components/ChatWidget"; // 👈 اضافه کردن چت‌بات
+import Profile from "./pages/Profile"
+import FAQPage from "./pages/FAQ";
 
 function AppContent() {
   const location = useLocation();
@@ -29,6 +31,10 @@ function AppContent() {
           <Route path="/products/:category" element={<ProductsCategory />} />
           <Route path="/products/:category/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/faq" element={<FAQPage />} />
+            <Route path="/profile" element={<Profile />} />
+
+          
         </Routes>
       </div>
 

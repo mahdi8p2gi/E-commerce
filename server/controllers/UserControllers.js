@@ -2,99 +2,119 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const JWT_SECRET = "your_jwt_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
+// ثبت‌نام
 export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    let { username, email, password } = req.body;
 
-    if (!name || !email || !password) {
+    if (!username || !email || !password) {
       return res.status(400).json({ success: false, message: "تمام فیلدها را پر کنید" });
     }
 
-    const existingUser = await User.findOne({ email });
+    username = username.toLowerCase().trim();
+    email = email.toLowerCase().trim();
+
+    // جستجو برای وجود نام کاربری یا ایمیل (حساس به حروف نیست)
+    const existingUser = await User.findOne({
+      $or: [
+        { email },
+        { username: { $regex: `^${username}$`, $options: "i" } }
+      ],
+    });
+
     if (existingUser) {
-      return res.status(409).json({ success: false, message: "ایمیل قبلا ثبت شده" });
+      return res.status(409).json({ success: false, message: "ایمیل یا نام کاربری قبلا ثبت شده" });
     }
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
     await newUser.save();
 
     const token = jwt.sign(
-      { userId: newUser._id, email: newUser.email },
+      { id: newUser._id, email: newUser.email },
       JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "7d" }
     );
 
-    // ارسال توکن در کوکی با تنظیمات امنیتی
     res.cookie("token", token, {
-      httpOnly: true,     // فقط از طریق HTTP (نه جاوااسکریپت) قابل دسترسیه برای امنیت بیشتر
-      secure: process.env.NODE_ENV === "production", // فقط روی HTTPS کوکی ارسال میشه
-      sameSite: "strict",  // جلوگیری از کوکی‌ در درخواست‌های سایت‌های دیگر
-      maxAge: 60 * 60 * 1000  // زمان انقضا کوکی به میلی‌ثانیه (1 ساعت)
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({ 
-      success: true, 
+    return res.status(201).json({
+      success: true,
       message: "ثبت‌نام با موفقیت انجام شد",
-      user: { name: newUser.name, email: newUser.email }  // اطلاعات کاربر بدون پسورد
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+      },
     });
-
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "خطای سرور" });
+    console.error("❌ خطا در ثبت‌نام:", error);
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      return res.status(409).json({ success: false, message: `${field} تکراری است` });
+    }
+    return res.status(500).json({ success: false, message: "خطای سرور" });
   }
 };
 
-
+// لاگین
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
 
-    // بررسی اینکه هر دو فیلد وارد شده‌اند
     if (!email || !password) {
       return res.status(400).json({ message: "ایمیل و رمز عبور الزامی است" });
     }
 
-    // پیدا کردن کاربر
+    email = email.toLowerCase().trim();
+
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ message: "کاربر یافت نشد" });
     }
 
-    // مقایسه رمز عبور
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "رمز عبور اشتباه است" });
     }
 
-    // ساخت توکن
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    // ذخیره توکن در کوکی
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        sameSite: "Lax", // اگر روی Vercel هستی بهتره این باشه
-        secure: process.env.NODE_ENV === "production", // فقط در https
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 روز
-      })
-      .status(200)
-      .json({
-        message: "ورود موفق",
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-        },
-      });
+    return res.status(200).json({
+      message: "ورود موفق",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (error) {
     console.error("❌ خطا در ورود:", error);
-    res.status(500).json({ message: "خطای سرور در ورود" });
+    return res.status(500).json({ message: "خطای سرور در ورود" });
   }
 };

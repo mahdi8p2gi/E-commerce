@@ -10,7 +10,7 @@ const connectdb = async () => {
     });
     console.log("✅ اتصال به MongoDB با موفقیت انجام شد");
   } catch (error) {
-    console.error("❌ خطا در اتصال به دیتابیس:", error.message);
+    console.error("datttttta baseeee errrorr", error.message);
     process.exit(1); // اگر اتصال قطع شد، سرور رو متوقف کن
   }
 };

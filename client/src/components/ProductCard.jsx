@@ -12,9 +12,9 @@ const ProductCard = ({ product }) => {
     setRating(Math.floor(Math.random() * 5) + 1); // عدد بین 1 تا 5
   }, []);
 
-  if (!product || !product.image || !Array.isArray(product.image) || product.image.length === 0) {
-    return null;
-  }
+  // if (!product || !product.image || !Array.isArray(product.image) || product.image.length === 0) {
+  //   return null;
+  // }
 
   return (
     <div
