@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -35,11 +37,32 @@ function Navbar() {
         <img src={assets.logo} alt="logo" className="h-10" />
       </NavLink>
 
+      
+      
+       {user?.isAdmin && (
+          <NavLink
+            to="/seller"
+            className="px-4 py-1 text-white bg-indigo-500 border rounded-full hover:bg-indigo-600"
+          >
+            Admin Dashboard
+          </NavLink>
+        )}
+
+
+
+
+        
       {/* Desktop Menu */}
       <div className="items-center hidden gap-8 text-gray-900 sm:flex">
-        <NavLink to="/" className="hover:text-primary">Home</NavLink>
-        <NavLink to="/products" className="hover:text-primary">Products</NavLink>
-        <NavLink to="/contact" className="hover:text-primary">Contact</NavLink>
+        <NavLink to="/" className="hover:text-primary">
+          Home
+        </NavLink>
+        <NavLink to="/products" className="hover:text-primary">
+          Products
+        </NavLink>
+        <NavLink to="/contact" className="hover:text-primary">
+          Contact
+        </NavLink>
 
         <div className="items-center hidden gap-2 px-3 text-sm bg-white border border-gray-300 rounded-full lg:flex">
           <input
@@ -67,6 +90,27 @@ function Navbar() {
             </span>
           </div>
         </div>
+
+        <Tooltip.Provider delayDuration={100}>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <div>
+                <FaRegHeart className="text-xl text-gray-500 cursor-pointer hover:text-red-500" />
+              </div>
+            </Tooltip.Trigger>
+
+            <Tooltip.Portal>
+              <Tooltip.Content
+                className="z-50 px-3 py-1 text-xs text-white bg-black rounded shadow-md animate-fade-in"
+                side="bottom"
+                sideOffset={5}
+              >
+                علاقه‌مندی‌ها
+                <Tooltip.Arrow className="fill-black" />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
 
         {!user ? (
           <button
@@ -98,7 +142,7 @@ function Navbar() {
                     My Profile
                   </li>
                 </NavLink>
-                <NavLink to="/orders" onClick={() => setProfileOpen(false)}>
+                <NavLink to="/my-orders" onClick={() => setProfileOpen(false)}>
                   <li className="px-4 py-2 cursor-pointer hover:bg-gray-100">
                     My Orders
                   </li>
@@ -107,7 +151,7 @@ function Navbar() {
                   className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                   onClick={logout}
                 >
-                  Logout 
+                  Logout
                 </li>
               </ul>
             )}
@@ -122,7 +166,7 @@ function Navbar() {
         className="sm:hidden"
       >
         <img
-         src={user ? assets.profile_icon : assets.menu_icon}
+          src={user ? assets.profile_icon : assets.menu_icon}
           alt="menu"
           className="w-10"
         />
