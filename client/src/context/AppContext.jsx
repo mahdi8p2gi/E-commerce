@@ -6,11 +6,14 @@ import { toast } from "react-hot-toast";
 // ایجاد کانتکست
 export const AppContext = createContext();
 
+// Provider برای کل اپ
 export const AppContextProvider = ({ children }) => {
-  const currency = process.env.REACT_APP_CURRENCY || "$";
   const navigate = useNavigate();
+  const currency = process.env.REACT_APP_CURRENCY || "$";
 
-  const [user, setUser] = useState(null);
+  const savedUser = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(savedUser || null);
+
   const [isSeller, setIsSeller] = useState(false);
   const [showUserLogin, setShowUserLogin] = useState(false);
   const [products, setProducts] = useState([]);
@@ -18,12 +21,12 @@ export const AppContextProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  // گرفتن محصولات ساختگی (شبیه‌سازی API)
+  // شبیه‌سازی گرفتن محصولات از API
   const fetchProducts = async () => {
     setProducts(dummyProducts);
   };
 
-  // افزودن محصول به سبد خرید
+  // افزودن به سبد خرید
   const addToCart = (itemID) => {
     const cartData = structuredClone(cartItem);
     if (cartData[itemID]) {
@@ -35,15 +38,17 @@ export const AppContextProvider = ({ children }) => {
     toast.success("Added to cart");
   };
 
+  // بروزرسانی تعداد یک آیتم
   const updateCartItem = (itemID, quantity) => {
-    let cartData = structuredClone(cartItem);
+    const cartData = structuredClone(cartItem);
     cartData[itemID] = quantity;
     setCartItem(cartData);
-    toast.success("Cart Updated");
+    toast.success("Cart updated");
   };
 
+  // حذف یک آیتم از سبد
   const removeFromCart = (itemID) => {
-    let cartData = structuredClone(cartItem);
+    const cartData = structuredClone(cartItem);
     if (cartData[itemID]) {
       cartData[itemID] -= 1;
       if (cartData[itemID] === 0) {
@@ -54,6 +59,7 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  // جمع کل تعداد محصولات سبد
   const getCartCount = () => {
     let totalCount = 0;
     for (const item in cartItem) {
@@ -62,10 +68,11 @@ export const AppContextProvider = ({ children }) => {
     return totalCount;
   };
 
+  // جمع قیمت کل سبد خرید
   const getCartAmount = () => {
     let totalAmount = 0;
     for (const item in cartItem) {
-      let itemInfo = products.find((p) => p._id === item);
+      const itemInfo = products.find((p) => p._id === item);
       if (itemInfo && cartItem[item] > 0) {
         totalAmount += itemInfo.offerPrice * cartItem[item];
       }
@@ -73,6 +80,16 @@ export const AppContextProvider = ({ children }) => {
     return Math.floor(totalAmount * 100) / 100;
   };
 
+  // ذخیره user در localStorage
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
+
+  // بارگذاری اولیه محصولات
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -102,4 +119,5 @@ export const AppContextProvider = ({ children }) => {
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
+// هوک اختصاصی برای استفاده راحت از کانتکست
 export const useAppContext = () => useContext(AppContext);

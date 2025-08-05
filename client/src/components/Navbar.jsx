@@ -20,98 +20,117 @@ function Navbar() {
   } = useAppContext();
 
   const logout = async () => {
-    setUser(null);
-    navigate("/");
-    setProfileOpen(false);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      setUser(null);
+      setProfileOpen(false);
+      navigate("/");
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
   };
 
   useEffect(() => {
     if (searchQuery.length > 0) {
       navigate("/products");
     }
-  }, [searchQuery]);
+  }, [searchQuery, navigate]);
 
   return (
     <nav className="relative flex items-center justify-between px-6 py-4 transition-all bg-white border-b border-gray-300 md:px-16 lg:px-24 xl:px-32">
+      {/* لوگو */}
       <NavLink to="/" onClick={() => setOpen(false)}>
         <img src={assets.logo} alt="logo" className="h-10" />
       </NavLink>
 
-      
-      
-       {user?.isAdmin && (
-          <NavLink
-            to="/seller"
-            className="px-4 py-1 text-white bg-indigo-500 border rounded-full hover:bg-indigo-600"
-          >
-            Admin Dashboard
-          </NavLink>
-        )}
+      {/* دکمه داشبورد ادمین */}
+      {user?.role === "admin" && (
+        <NavLink
+          to="/seller-layout"
+          className="px-4 py-1 text-white bg-indigo-500 border rounded-full hover:bg-indigo-600"
+        >
+          Admin Dashboard
+        </NavLink>
+      )}
 
-
-
-
-        
-      {/* Desktop Menu */}
+      {/* منوی دسکتاپ */}
       <div className="items-center hidden gap-8 text-gray-900 sm:flex">
-        <NavLink to="/" className="hover:text-primary">
+        <NavLink to="/" className="transition duration-300 hover:text-primary">
           Home
         </NavLink>
-        <NavLink to="/products" className="hover:text-primary">
+        <NavLink to="/products" className="transition duration-300 hover:text-primary">
           Products
         </NavLink>
-        <NavLink to="/contact" className="hover:text-primary">
+        <NavLink to="/contact" className="transition duration-300 hover:text-primary">
           Contact
         </NavLink>
 
+        {/* جستجو */}
         <div className="items-center hidden gap-2 px-3 text-sm bg-white border border-gray-300 rounded-full lg:flex">
           <input
             onChange={(e) => setSearchQuery(e.target.value)}
             className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
             type="text"
             placeholder="Search products"
+            value={searchQuery}
           />
           <img src={assets.search_icon} alt="search" className="w-4 h-4" />
         </div>
 
         {/* آیکون سبد خرید */}
-        <div className="flex items-center gap-4">
-          <div
-            onClick={() => navigate("/cart")}
-            className="relative cursor-pointer"
-          >
-            <img
-              src={assets.nav_cart_icon}
-              alt="cart"
-              className="w-6 opacity-80"
-            />
-            <span className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] h-[18px] rounded-full flex items-center justify-center">
-              {getCartCount()}
-            </span>
-          </div>
-        </div>
 
         <Tooltip.Provider delayDuration={100}>
           <Tooltip.Root>
             <Tooltip.Trigger asChild>
-              <div>
-                <FaRegHeart className="text-xl text-gray-500 cursor-pointer hover:text-red-500" />
+              <div
+                onClick={() => navigate("/cart")}
+                className="relative cursor-pointer"
+              >
+                <img
+                  src={assets.nav_cart_icon}
+                  alt="cart"
+                  className="w-6 transition opacity-80 hover:scale-110"
+                />
+                {getCartCount() > 0 && (
+                  <span className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] h-[18px] rounded-full flex items-center justify-center">
+                    {getCartCount()}
+                  </span>
+                )}
               </div>
             </Tooltip.Trigger>
-
             <Tooltip.Portal>
               <Tooltip.Content
-                className="z-50 px-3 py-1 text-xs text-white bg-black rounded shadow-md animate-fade-in"
                 side="bottom"
-                sideOffset={5}
+                sideOffset={6}
+                className="z-50 px-3 py-1 text-xs text-white rounded shadow-lg bg-primary animate-fade-in"
               >
-                علاقه‌مندی‌ها
-                <Tooltip.Arrow className="fill-black" />
+                cart item
               </Tooltip.Content>
             </Tooltip.Portal>
           </Tooltip.Root>
         </Tooltip.Provider>
 
+        {/* علاقه مندی ها */}
+        <Tooltip.Provider delayDuration={100}>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <div>
+                <FaRegHeart className="text-xl text-gray-500 transition cursor-pointer hover:scale-110 hover:text-red-500" />
+              </div>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content
+                className="z-50 px-3 py-1 text-xs text-white rounded shadow-md bg-primary animate-fade-in"
+                side="bottom"
+                sideOffset={5}
+              >
+                wishlist
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
+
+        {/* بخش کاربر */}
         {!user ? (
           <button
             onClick={() => setShowUserLogin(true)}
@@ -124,11 +143,15 @@ function Navbar() {
             <div
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => setProfileOpen(!profileOpen)}
+              title="Profile menu"
             >
               <img
-                src={assets.profile_icon}
-                className="w-10 h-10 rounded-full"
+                src={user?.profileImage || assets.profile_icon} // اگر نال بود عکس پیش‌فرض باشه
                 alt="Profile"
+                className="object-cover w-10 h-10 rounded-full"
+                onError={(e) => {
+                  e.currentTarget.src = assets.profile_icon; // اگر تصویر خراب بود عکس پیش‌فرض بذار
+                }}
               />
             </div>
 
@@ -159,20 +182,23 @@ function Navbar() {
         )}
       </div>
 
-      {/* Mobile Menu Button */}
+      {/* دکمه موبایل منو یا عکس پروفایل در موبایل */}
       <button
         onClick={() => setOpen(!open)}
         aria-label="Menu"
         className="sm:hidden"
       >
         <img
-          src={user ? assets.profile_icon : assets.menu_icon}
+          src={user?.profileImage ? user.profileImage : assets.menu_icon}
           alt="menu"
-          className="w-10"
+          className="object-cover w-10 h-10 rounded-full"
+          onError={(e) => {
+            e.currentTarget.src = assets.menu_icon;
+          }}
         />
       </button>
 
-      {/* Mobile Menu */}
+      {/* منوی موبایل */}
       {open && (
         <div className="absolute left-0 z-50 flex flex-col items-start w-full gap-4 px-6 py-4 text-sm bg-white shadow-md top-full sm:hidden">
           <NavLink
@@ -193,7 +219,7 @@ function Navbar() {
 
           {user && (
             <NavLink
-              to="/orders"
+              to="/my-orders"
               onClick={() => setOpen(false)}
               className="w-full py-1 hover:text-primary"
             >
