@@ -20,18 +20,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    profileImage: {
-      type: String, // base64 encoded string
-      default: null,
-    },
+    avatar: { type: String },
 
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
     },
-
-    
   },
   { timestamps: true }
 );

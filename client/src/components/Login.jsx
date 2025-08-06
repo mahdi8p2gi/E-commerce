@@ -30,7 +30,8 @@ function Login() {
 
       setLoading(true);
 
-      const endpoint = state === "login" ? "/api/user/login" : "/api/user/register";
+      const endpoint =
+        state === "login" ? "/api/users/login" : "/api/users/register";
       const payload =
         state === "login"
           ? { email, password }
@@ -39,17 +40,24 @@ function Login() {
       try {
         const response = await fetch(`http://localhost:5000${endpoint}`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(payload),
+          credentials: "include", // <=== این خط رو اضافه کن
         });
 
         const data = await response.json();
+         console.log("Response data:", data);
 
-        if (!response.ok || !data.user) {
+        if (!response.ok || !data.user || !data.token) {
           throw new Error(data.message || "ورود/ثبت‌نام ناموفق بود.");
         }
 
+        // ذخیره توکن در localStorage
+        localStorage.setItem("token", data.token);
+
+        // ذخیره اطلاعات کاربر در context
         setUser({
           id: data.user.id || "",
           username: data.user.username || "",
