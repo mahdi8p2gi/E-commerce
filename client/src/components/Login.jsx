@@ -1,8 +1,11 @@
 import React, { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useAppContext } from "../context/AppContext";
 
 function Login() {
   const { setShowUserLogin, setUser } = useAppContext();
+  const navigate = useNavigate();
 
   const [state, setState] = useState("login"); // "login" | "register"
   const [name, setName] = useState("");
@@ -44,25 +47,26 @@ function Login() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-          credentials: "include", // <=== این خط رو اضافه کن
+          credentials: "include",
         });
 
         const data = await response.json();
-         console.log("Response data:", data);
+        console.log("Response data:", data);
 
-        if (!response.ok || !data.user || !data.token) {
-          throw new Error(data.message || "ورود/ثبت‌نام ناموفق بود.");
-        }
+        // if (!response.ok || !data.user || !data.token) {
+        //   throw new Error(data.message || "ورود/ثبت‌نام ناموفق بود.");
+        // }
 
-        // ذخیره توکن در localStorage
-        localStorage.setItem("token", data.token);
+        // localStorage.setItem("token", data.token);
 
-        // ذخیره اطلاعات کاربر در context
         setUser({
           id: data.user.id || "",
           username: data.user.username || "",
           email: data.user.email || "",
+          role: data.user.role,  // نقش کاربر ذخیره میشه
         });
+
+        navigate("/");
 
         resetForm();
         setShowUserLogin(false);
@@ -72,7 +76,7 @@ function Login() {
         setLoading(false);
       }
     },
-    [state, name, email, password, setUser, setShowUserLogin]
+    [state, name, email, password, setUser, setShowUserLogin, navigate]
   );
 
   if (!show) return null;
@@ -164,8 +168,8 @@ function Login() {
           {loading
             ? "لطفاً صبر کنید..."
             : state === "register"
-            ? "Create Account"
-            : "Login"}
+              ? "Create Account"
+              : "Login"}
         </button>
       </form>
     </div>

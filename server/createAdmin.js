@@ -1,37 +1,24 @@
 import mongoose from "mongoose";
+import User from "./models/User.js"; // مسیر مدل
 import bcrypt from "bcrypt";
-import User from "./models/User.js";  // مسیر درست به مدل کاربر
+mongoose
+  .connect("mongodb://localhost:27017/green-cart")
+  .then(async () => {
+    const adminExists = await User.findOne({ email: "admin@example.com" });
 
-const MONGO_URI = "mongodb://localhost:27017/green-cart"; // آدرس دیتابیس‌ات را اینجا بذار
-
-async function createAdmin() {
-  await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
-  const email = "admin@example.com";      // ایمیل ادمین رو اینجا تغییر بده
-  const password = "admin123";             // پسورد ادمین رو اینجا تغییر بده
-  const username = "admin";
-
-  const existingAdmin = await User.findOne({ email });
-  if (existingAdmin) {
-    console.log("ادمین قبلاً ساخته شده");
-    process.exit(0);
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const adminUser = new User({
-    username,
-    email,
-    password: hashedPassword,
-    role: "admin",
-  });
-
-  await adminUser.save();
-  console.log("ادمین ساخته شد!");
-  process.exit(0);
-}
-
-createAdmin().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+    if (!adminExists) {
+      const hashedPassword = await bcrypt.hash("yourAdminPassword", 10);
+      const admin = new User({
+        username: "admin",
+        email: "admin@example.com",
+        password: hashedPassword, 
+        role: "admin",
+      });
+      await admin.save();
+      console.log("ادمین ساخته شد");
+    } else {
+      console.log("ادمین قبلاً وجود دارد");
+    }
+    mongoose.disconnect();
+  })
+  .catch(console.error);

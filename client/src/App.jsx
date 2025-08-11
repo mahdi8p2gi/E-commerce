@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation ,Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 // Layouts & Shared Components
@@ -58,6 +58,7 @@ function AppContent() {
 
           {/* مسیرهای پنل فروشنده (ادمین) */}
           <Route path="/seller-layout" element={<SellerLayout />}>
+          <Route index element={<Navigate to="add-product" replace />} />
             <Route path="add-product" element={<AddProduct />} />
             <Route path="products-list" element={<ProductList />} />
             <Route path="orders" element={<Order />} />

@@ -41,7 +41,11 @@ export const AppContextProvider = ({ children }) => {
   // بروزرسانی تعداد یک آیتم
   const updateCartItem = (itemID, quantity) => {
     const cartData = structuredClone(cartItem);
-    cartData[itemID] = quantity;
+    if (quantity === 0) {
+      delete cartData[itemID];
+    } else {
+      cartData[itemID] = quantity;
+    }
     setCartItem(cartData);
     toast.success("Cart updated");
   };

@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import sharp from "sharp";
+import mongoose from "mongoose";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
-// ثبت‌نام
+
 
 // ثبت‌نام
 export const register = async (req, res) => {
@@ -126,7 +126,8 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role, // 👈 این خط رو اضافه کن
-      },
+      }, 
+       token,
     });
   } catch (error) {
     console.error("❌ خطا در ورود:", error);
@@ -134,45 +135,38 @@ export const login = async (req, res) => {
   }
 };
 
+
+
+
+
 export const updateProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json({ message: "کاربر یافت نشد" });
+    const { userId, username, email } = req.body;
 
-    const { name, email, password } = req.body;
-
-    // به‌روزرسانی نام و ایمیل
-    if (name) user.name = name;
-    if (email) user.email = email;
-
-    // اگر رمز وارد شده بود، رمز قبلی را بروزرسانی کن
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "شناسه کاربر معتبر نیست" });
     }
 
-    // اگر کاربر عکس فرستاده بود
-    if (req.file) {
-      const imageBuffer = req.file.buffer;
-      // اینجا می‌تونی ذخیره کنی در دیسک یا فضای ابری
-      // برای تست، فرض می‌گیریم آدرس عکس رو در فیلد avatar ذخیره می‌کنی
-      user.avatar = `data:${req.file.mimetype};base64,${imageBuffer.toString(
-        "base64"
-      )}`;
+    if (!username && !email) {
+      return res.status(400).json({ message: "نام کاربری یا ایمیل باید ارسال شود" });
     }
 
-    await user.save();
-
-    res.json({
-      message: "پروفایل با موفقیت به‌روزرسانی شد",
-      user: {
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        ...(username && { username }),
+        ...(email && { email }),
       },
-    });
-  } catch (err) {
-    console.error("خطا در ویرایش پروفایل:", err);
-    res.status(500).json({ message: "خطا در سرور" });
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "کاربر یافت نشد" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "خطای سرور" });
   }
 };

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 function Navbar() {
@@ -35,6 +35,8 @@ function Navbar() {
       navigate("/products");
     }
   }, [searchQuery, navigate]);
+  console.log("User role is:", user?.role);
+
 
   return (
     <nav className="relative flex items-center justify-between px-6 py-4 transition-all bg-white border-b border-gray-300 md:px-16 lg:px-24 xl:px-32">
@@ -52,6 +54,8 @@ function Navbar() {
           Admin Dashboard
         </NavLink>
       )}
+      <p className="text-black">Current Role: {user?.role || "No user"}</p>
+
 
       {/* منوی دسکتاپ */}
       <div className="items-center hidden gap-8 text-gray-900 sm:flex">

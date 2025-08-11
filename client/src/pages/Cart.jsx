@@ -48,6 +48,14 @@ const Cart = () => {
   const tax = Math.floor(getCartAmount() * 0.02 * 100) / 100;
   const total = Math.floor((getCartAmount() + tax) * 100) / 100;
 
+ if (!cartArray.length) {
+  return (
+    <div className="mt-20 text-center  text-gray-500 text-lg font-medium">
+      Your cart is empty :(
+    </div>
+  );
+}
+
   return products.length > 0 && cartItem ? (
     <div className="flex flex-col mt-16 md:flex-row">
       {/* بخش سبد خرید */}

@@ -10,6 +10,7 @@ const Profile = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
+
   const orders = [
     {
       id: "123",
@@ -33,26 +34,22 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    if (password) formData.append("password", password);
-    if (image) formData.append("avatar", image);
 
     try {
-      const res = await fetch("http://localhost:5000/api/users/profile", {
+      const userId = "64235a1e6b4c7a1234567890"; // مثلا یک ObjectId واقعی
+
+
+      const response = await fetch("http://localhost:5000/api/users/profile", {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, username: name, email }),  // فرض کردم name همان username است
       });
 
-      const data = await res.json();
-      if (res.ok) {
-        setMessage("✅ پروفایل با موفقیت آپدیت شد");
+      const data = await response.json();
+      if (!response.ok) {
+        setMessage(data.message || "خطا در بروزرسانی پروفایل");
       } else {
-        setMessage(data.message || "❌ خطا در آپدیت");
+        setMessage("✅ پروفایل با موفقیت بروزرسانی شد");
       }
     } catch (err) {
       setMessage("❌ خطا در اتصال به سرور");

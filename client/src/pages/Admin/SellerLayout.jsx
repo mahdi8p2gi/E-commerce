@@ -1,20 +1,30 @@
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet} from "react-router-dom";
 import { assets } from "../../assets/assets";
 
 const SellerLayout = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-const sidebarLinks = [
-  { name: "Add Product", path: "/seller-layout/add-product", icon: assets.add_icon },
-  { name: "Product List", path: "/seller-layout/products-list", icon: assets.product_list_icon },
-  { name: "Orders", path: "/seller-layout/orders", icon: assets.order_icon },
-];
+  const sidebarLinks = [
+    { name: "Add Product", path: "/seller-layout/add-product", icon: assets.add_icon },
+    { name: "Product List", path: "/seller-layout/products-list", icon: assets.product_list_icon },
+    { name: "Orders", path: "/seller-layout/orders", icon: assets.order_icon },
+  ];
 
+  // const logout = async ()=> {
+  //   try {
+  //     // await fetch('api/logout' , {
+  //     //   method : "POST",
+  //     //   credentials : "include"
+  //     // })
 
-  const handleLogout = () => {
-    // اگر logout واقعی داری، اینجا انجام بده
-    navigate("/");
-  };
+  //     // localStorage.removeItem("user")
+  //     navigate('/')
+      
+  //   } catch (error) {
+  //     console.log("خطا در خروج , error")
+  //   }
+  // }
+
 
   return (
     <div className="flex h-screen bg-white">
@@ -32,10 +42,9 @@ const sidebarLinks = [
               key={index}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-md transition-all ${
-                  isActive
-                    ? "bg-indigo-100 text-indigo-600 font-medium"
-                    : "text-gray-700 hover:bg-gray-100"
+                `flex items-center gap-3 px-4 py-3 rounded-md transition-all ${isActive
+                  ? "bg-indigo-100 text-indigo-600 font-medium"
+                  : "text-gray-700 hover:bg-gray-100"
                 }`
               }
             >
@@ -52,7 +61,7 @@ const sidebarLinks = [
         <div className="flex items-center justify-between mb-6">
           <p className="text-lg font-semibold">Hi, Admin 👋</p>
           <button
-            onClick={handleLogout}
+            // onClick={logout}
             className="px-4 py-1 text-sm border border-gray-400 rounded-full hover:bg-gray-100"
           >
             Logout
