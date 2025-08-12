@@ -13,7 +13,6 @@ import userRouter from "./routes/userRoute.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// پیکربندی dotenv
 dotenv.config();
 
 // ساخت اپ
