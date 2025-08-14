@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { dummyProducts } from "../assets/assets";
 import { toast } from "react-hot-toast";
 
+
 // ایجاد کانتکست
 export const AppContext = createContext();
 
@@ -94,6 +95,19 @@ export const AppContextProvider = ({ children }) => {
     }
   }, [user]);
 
+
+  const [wishlist, setWishlist] = useState([]);
+
+  const addToWishlist = (product) => {
+    if (!wishlist.find(item => item._id === product._id)) {
+      setWishlist([...wishlist, product]);
+    }
+  };
+
+  const removeFromWishlist = (id) => {
+    setWishlist(wishlist.filter(item => item._id !== id));
+  };
+
   // بارگذاری اولیه محصولات
   useEffect(() => {
     fetchProducts();
@@ -119,6 +133,9 @@ export const AppContextProvider = ({ children }) => {
     setSelectedCategory,
     getCartAmount,
     getCartCount,
+    wishlist,
+    addToWishlist,
+    removeFromWishlist,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

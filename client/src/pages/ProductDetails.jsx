@@ -3,15 +3,19 @@ import { useAppContext } from "../context/AppContext";
 import { useState, useEffect } from "react";
 import ProductCard from "../components/ProductCard";
 import toast, { Toaster } from "react-hot-toast";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import * as Tooltip from "@radix-ui/react-tooltip";
+
 
 const ProductDetails = () => {
+  const navigate = useNavigate();
   const { category, id } = useParams();
   const { products, addToCart } = useAppContext();
-  const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
   const [thumbnail, setThumbnail] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [isLikedIcon, setIsLikedIcon] = useState(false)
 
   // Comments
   const [comments, setComments] = useState([
@@ -37,6 +41,11 @@ const ProductDetails = () => {
   const [sortOrder, setSortOrder] = useState("oldest");
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState("");
+
+  const handleWishListIcon = () => {
+    setIsLikedIcon(!isLikedIcon)
+  }
+
 
   useEffect(() => {
     const found = products.find((item) => item._id === id);
@@ -74,12 +83,12 @@ const ProductDetails = () => {
   };
 
 
-  
+
   const handleLike = (index) => {
     const updated = [...comments];
     const comment = updated[index];
 
-    if (comment.userAction === "like") return; 
+    if (comment.userAction === "like") return;
 
     if (comment.userAction === "dislike") {
       comment.dislikes -= 1;
@@ -97,7 +106,7 @@ const ProductDetails = () => {
     const updated = [...comments];
     const comment = updated[index];
 
-    if (comment.userAction === "dislike") return; 
+    if (comment.userAction === "dislike") return;
 
     if (comment.userAction === "like") {
       comment.likes -= 1;
@@ -125,6 +134,8 @@ const ProductDetails = () => {
   };
 
   if (!product) return <p className="p-6 text-lg">Product not found.</p>;
+
+
 
   return (
     <div className="w-full max-w-6xl px-6 mx-auto mt-20">
@@ -154,7 +165,35 @@ const ProductDetails = () => {
 
         <div className="flex flex-col justify-between w-full md:w-1/2">
           <div>
-            <h1 className="text-2xl font-semibold">{product.name}</h1>
+            <div className="flex items-center gap-4">
+              <h1 className="text-2xl font-semibold">{product.name}</h1>
+              <Tooltip.Provider delayDuration={100}>
+                <Tooltip.Root>
+                  <Tooltip.Trigger asChild>
+                    <div onClick={handleWishListIcon}>
+                      {isLikedIcon
+                        ? <FaHeart onClick={handleWishListIcon} className="text-xl text-red-500 transition cursor-pointer hover:scale-110" />
+                        : <FaRegHeart onClick={handleWishListIcon} className="text-xl text-red-500 transition cursor-pointer hover:scale-110" />
+                      }
+                    </div>
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Content
+                      className="z-50 px-3 py-1 text-xs text-white rounded shadow-md bg-primary animate-fade-in"
+                      side="bottom"
+                      sideOffset={5}
+
+                    >
+
+                      {isLikedIcon ? "remove from wishlist" : "add to wishlist"}
+
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              </Tooltip.Provider>
+            </div>
+
+
             <p className="mt-1 text-sm text-gray-500">{product.category}</p>
             <div className="flex items-center gap-1 mt-2">
               {[...Array(5)].map((_, i) => (

@@ -190,7 +190,7 @@ const Cart = () => {
                     {item.street}, {item.city}
                   </p>
                 ))}
-                <p className="p-2 text-center text-indigo-500 cursor-pointer hover:bg-indigo-500/10">
+                <p className="p-2 text-center text-indigo-500 cursor-pointer hover:bg-primary/10">
                   Add Address
                 </p>
               </div>

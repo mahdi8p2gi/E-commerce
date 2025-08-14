@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { GoogleLogin } from '@react-oauth/google';  // وارد کردن کامپوننت GoogleLogin
 import { useAppContext } from "../context/AppContext";
 
 function Login() {
@@ -51,19 +51,12 @@ function Login() {
         });
 
         const data = await response.json();
-        console.log("Response data:", data);
-
-        // if (!response.ok || !data.user || !data.token) {
-        //   throw new Error(data.message || "ورود/ثبت‌نام ناموفق بود.");
-        // }
-
-        // localStorage.setItem("token", data.token);
 
         setUser({
           id: data.user.id || "",
           username: data.user.username || "",
           email: data.user.email || "",
-          role: data.user.role,  // نقش کاربر ذخیره میشه
+          role: data.user.role,
         });
 
         navigate("/");
@@ -79,6 +72,40 @@ function Login() {
     [state, name, email, password, setUser, setShowUserLogin, navigate]
   );
 
+  // ورود با گوگل
+  const handleGoogleLogin = async (response) => {
+    const credential = response.credential;
+    // ارسال اطلاعات اعتبارسنجی گوگل به سرور برای ورود
+    try {
+      const res = await fetch("http://localhost:5000/api/users/google-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: credential }),
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setUser({
+          id: data.user.id,
+          username: data.user.username,
+          email: data.user.email,
+          role: data.user.role,
+        });
+
+        navigate("/");
+        setShowUserLogin(false);
+      } else {
+        setError("ورود با گوگل ناموفق بود.");
+      }
+    } catch (error) {
+      setError("خطا در ورود با گوگل.");
+    }
+  };
+
   if (!show) return null;
 
   return (
@@ -90,7 +117,7 @@ function Login() {
         <button
           type="button"
           onClick={() => setShow(false)}
-          className="absolute text-xl text-gray-400 top-3 right-3 hover:text-gray-600"
+          className="absolute text-3xl text-black top-3 right-3 hover:text-red-600 transition duration-200 hover:scale-110"
         >
           &times;
         </button>
@@ -168,9 +195,17 @@ function Login() {
           {loading
             ? "لطفاً صبر کنید..."
             : state === "register"
-              ? "Create Account"
-              : "Login"}
+            ? "Create Account"
+            : "Login"}
         </button>
+
+        {/* دکمه ورود با گوگل */}
+        <GoogleLogin
+          onSuccess={handleGoogleLogin}
+          onError={() => setError("خطا در ورود با گوگل")}
+          useOneTap
+        />
+
       </form>
     </div>
   );

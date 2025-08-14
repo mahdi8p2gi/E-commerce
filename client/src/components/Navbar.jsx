@@ -8,7 +8,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-
+  
   const {
     user,
     setUser,
@@ -38,6 +38,11 @@ function Navbar() {
 
 
 
+  const handleWishList = async () => {
+    navigate('/wishlist')
+  }
+
+
   return (
     <nav className="relative flex items-center justify-between px-6 py-4 transition-all bg-white border-b border-gray-300 md:px-16 lg:px-24 xl:px-32">
       {/* لوگو */}
@@ -49,7 +54,7 @@ function Navbar() {
       {user?.role === "admin" && (
         <NavLink
           to="/seller-layout"
-          className="px-4 py-1 text-white bg-indigo-500 border rounded-full hover:bg-indigo-600"
+          className="px-4 py-1 text-white bg-primary border rounded-full hover:bg-indigo-600"
         >
           Admin Dashboard
         </NavLink>
@@ -118,7 +123,7 @@ function Navbar() {
         <Tooltip.Provider delayDuration={100}>
           <Tooltip.Root>
             <Tooltip.Trigger asChild>
-              <div>
+              <div onClick={handleWishList}>
                 <FaRegHeart className="text-xl text-gray-500 transition cursor-pointer hover:scale-110 hover:text-red-500" />
               </div>
             </Tooltip.Trigger>
@@ -127,6 +132,7 @@ function Navbar() {
                 className="z-50 px-3 py-1 text-xs text-white rounded shadow-md bg-primary animate-fade-in"
                 side="bottom"
                 sideOffset={5}
+
               >
                 wishlist
               </Tooltip.Content>

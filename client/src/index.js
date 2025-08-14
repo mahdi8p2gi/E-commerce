@@ -1,17 +1,23 @@
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { AppContextProvider } from './context/AppContext';
-import { ChatProvider } from './context/ChatContext'; // 👈 اضافه کن
-import App from './App';
-import './index.css';
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import { AppContextProvider } from "./context/AppContext";
+import { ChatProvider } from "./context/ChatContext";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import App from "./App";
+import "./index.css";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <AppContextProvider>
-      <ChatProvider> {/* 👈 این رو اضافه کن */}
-        <App />
-      </ChatProvider>
-    </AppContextProvider>
+    <GoogleOAuthProvider clientId="63677105911-791q0ms43r7mfn8b8rsntau9c9pckhtp.apps.googleusercontent.com">
+      
+        <AppContextProvider>
+          <ChatProvider>
+            <App />
+          </ChatProvider>
+        </AppContextProvider>
+   
+    </GoogleOAuthProvider>
   </BrowserRouter>
 );

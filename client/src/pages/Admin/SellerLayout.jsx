@@ -43,8 +43,8 @@ const SellerLayout = () => {
               to={item.path}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-md transition-all ${isActive
-                  ? "bg-indigo-100 text-indigo-600 font-medium"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-primary/20 text-primary font-medium"
+                  : "text-gray-700 hover:bg-primary/20"
                 }`
               }
             >

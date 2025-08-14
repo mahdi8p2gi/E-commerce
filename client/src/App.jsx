@@ -25,6 +25,7 @@ import SellerLayout from "./pages/Admin/SellerLayout";
 import AddProduct from "./pages/Admin/AddProduct";
 import ProductList from "./pages/Admin/ProductList";
 import Order from "./pages/Admin/Order";
+import WishList from "./pages/WishList";
 
 function AppContent() {
   const location = useLocation();
@@ -55,6 +56,8 @@ function AppContent() {
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/my-orders" element={<MyOrders />} />
+          <Route path="/wishlist" element={<WishList />} />
+
 
           {/* مسیرهای پنل فروشنده (ادمین) */}
           <Route path="/seller-layout" element={<SellerLayout />}>
