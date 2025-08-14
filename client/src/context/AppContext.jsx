@@ -8,6 +8,7 @@ export const AppContext = createContext();
 
 // Provider برای کل اپ
 export const AppContextProvider = ({ children }) => {
+  const url = "https://e-commerce-backend-0zqg.onrender.com"
   const navigate = useNavigate();
   const currency = process.env.REACT_APP_CURRENCY || "$";
 
