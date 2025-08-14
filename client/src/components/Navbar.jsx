@@ -35,7 +35,7 @@ function Navbar() {
       navigate("/products");
     }
   }, [searchQuery, navigate]);
-  console.log("User role is:", user?.role);
+
 
 
   return (
