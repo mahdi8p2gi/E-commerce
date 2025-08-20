@@ -6,6 +6,7 @@ function MainBanner() {
     <div className="relative">
       {/* موبایل بنر */}
       <img
+      loading="lazy"
         src={assets.main_banner_bg_sm}
         alt="banner"
         className="block w-full md:hidden"
@@ -13,6 +14,7 @@ function MainBanner() {
 
       {/* دسکتاپ بنر */}
       <img
+      loading="lazy"
         src={assets.main_banner_bg}
         alt="banner"
         className="hidden w-full md:block"
@@ -41,6 +43,7 @@ function MainBanner() {
           >
             Explore Deals
             <img
+            loading="lazy"
               className="transition transform group-hover:translate-x-1"
               src={assets.black_arrow_icon}
               alt="arrow"

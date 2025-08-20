@@ -5,12 +5,14 @@ function BottomBanner() {
     <div className="relative mt-24">
       {/* تصویر دسکتاپ */}
       <img
+      loading="lazy"
         src={assets.bottom_banner_image}
         alt="banner"
         className="hidden w-full md:block"
       />
       {/* تصویر موبایل */}
       <img
+      loading="lazy"
         src={assets.bottom_banner_image_sm}
         alt="banner"
         className="w-full md:hidden"
@@ -26,6 +28,7 @@ function BottomBanner() {
           {features.map((feature, index) => (
             <div key={index} className="flex items-center gap-4">
               <img
+              loading="lazy"
                 src={feature.icon}
                 alt={feature.title}
                 className="md:w-11 w-9"

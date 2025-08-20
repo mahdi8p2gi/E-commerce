@@ -150,6 +150,7 @@ const ProductDetails = () => {
           <div className="flex flex-col gap-3">
             {product.image.map((img, i) => (
               <img
+              loading="lazy"
                 key={i}
                 src={img}
                 onClick={() => setThumbnail(img)}
@@ -158,6 +159,7 @@ const ProductDetails = () => {
             ))}
           </div>
           <img
+          loading="lazy"
             src={thumbnail}
             className="object-contain border rounded w-72 h-72"
           />
