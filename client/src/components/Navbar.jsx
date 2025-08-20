@@ -146,7 +146,7 @@ function Navbar() {
             onClick={() => setShowUserLogin(true)}
             className="px-8 py-2 text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary-dull"
           >
-            Login | Sign up
+            Login 
           </button>
         ) : (
           <div className="relative">
@@ -163,6 +163,7 @@ function Navbar() {
                   e.currentTarget.src = assets.profile_icon; // اگر تصویر خراب بود عکس پیش‌فرض بذار
                 }}
               />
+              <span>ali</span>
             </div>
 
             {profileOpen && (

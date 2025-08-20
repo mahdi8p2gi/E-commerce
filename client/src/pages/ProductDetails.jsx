@@ -125,7 +125,7 @@ const ProductDetails = () => {
   };
 
   const handleReply = (index) => {
-    if (!replyText.trim()) return;
+    if (!replyText.trim()) {toast.error("input is empty")} return 
     const updated = [...comments];
     updated[index].replies.push({ text: replyText, user: "Guest" });
     setComments(updated);
@@ -242,8 +242,11 @@ const ProductDetails = () => {
       {/* Comments */}
       <div className="mt-20">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">User Comments</h2>
-          <div className="w-20 h-0.5 rounded-full bg-primary mt-2"></div>
+          <div className="">
+            <h2 className="text-xl font-semibold">User Comments</h2>
+            <div className="w-20 h-0.5 rounded-full bg-primary mt-2"></div>
+          </div>
+
 
           <select
             className="p-1 text-sm border rounded"
