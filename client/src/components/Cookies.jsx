@@ -31,7 +31,7 @@ const Cookies = () => {
       </h2>
       <p className="w-11/12 mb-4 text-sm sm:text-base">
         This website uses cookies for functionality, analytics, and marketing. By accepting, you agree to our{" "}
-        <a href="#" className="font-medium underline hover:text-primary">
+        <a href="/cookie-policy" className="font-medium underline hover:text-primary">
           Cookie Policy
         </a>.
       </p>
