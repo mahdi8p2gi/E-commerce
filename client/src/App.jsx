@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation ,Navigate } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 // Layouts & Shared Components
@@ -27,6 +27,8 @@ import ProductList from "./pages/Admin/ProductList";
 import Order from "./pages/Admin/Order";
 import WishList from "./pages/WishList";
 import CookiePolicy from "./pages/CookiePolicy";
+import ContactUs from "./pages/ContactUs";
+import NotFound from "./pages/NotFound";
 
 function AppContent() {
   const location = useLocation();
@@ -58,17 +60,18 @@ function AppContent() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/my-orders" element={<MyOrders />} />
           <Route path="/wishlist" element={<WishList />} />
+          <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
-
-
-
           {/* مسیرهای پنل فروشنده (ادمین) */}
           <Route path="/seller-layout" element={<SellerLayout />}>
-          <Route index element={<Navigate to="add-product" replace />} />
+            <Route index element={<Navigate to="add-product" replace />} />
             <Route path="add-product" element={<AddProduct />} />
             <Route path="products-list" element={<ProductList />} />
             <Route path="orders" element={<Order />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
+
         </Routes>
       </div>
 

@@ -5,6 +5,7 @@ import Cookies from "../components/Cookies"
 import MainBanner from "../components/MainBanner"
 import NewsLetter from "../components/NewLetter"
 import ScrollToTopButton from "../components/ScrollToTopButton";
+import Testimonial from "../components/Testimonial"
 function Home() {
   return (
     <div className='mt-10'>
@@ -13,8 +14,9 @@ function Home() {
       <Categories />
       <BestSeller />
       <BottomBanner />
+      <Testimonial />
       <NewsLetter />  
-       <ScrollToTopButton />
+      <ScrollToTopButton />
     </div>
   )
 }

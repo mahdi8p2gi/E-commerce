@@ -32,8 +32,8 @@ const Footer = () => {
       </div>
       <p className="py-4 text-sm text-center text-gray-500 md:text-base">
         Copyright {new Date().getFullYear()} ©{" "}
-        <a href="https://prebuiltui.com" className="hover:underline">
-          PrebuiltUI
+        <a href="/" className="hover:underline">
+          Green Cart
         </a>{" "}
         All Right Reserved.
       </p>
