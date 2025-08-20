@@ -5,8 +5,6 @@ import mongoose from "mongoose";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
-
-
 // ثبت‌نام
 export const register = async (req, res) => {
   try {
@@ -126,12 +124,39 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role, // 👈 این خط رو اضافه کن
-      }, 
-       token,
+      },
+      token,
     });
   } catch (error) {
     console.error("❌ خطا در ورود:", error);
     return res.status(500).json({ message: "خطای سرور در ورود" });
+  }
+};
+
+export const isAuth = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await User.findById(userId).select("-password");
+    return res.json({ success: true, user });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    // پاک کردن کوکی sellerToken
+    res.clearCookie("sellerToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // فقط روی https در پروداکشن
+      sameSite: "strict",
+    });
+
+    return res.json({ success: true, message: "Logged out successfully" });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
   }
 };
 
@@ -148,7 +173,9 @@ export const updateProfile = async (req, res) => {
     }
 
     if (!username && !email) {
-      return res.status(400).json({ message: "نام کاربری یا ایمیل باید ارسال شود" });
+      return res
+        .status(400)
+        .json({ message: "نام کاربری یا ایمیل باید ارسال شود" });
     }
 
     const updatedUser = await User.findByIdAndUpdate(

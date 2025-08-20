@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import connectdb from "./configs/db.js";
 import productRoutes from "./routes/productRoutes.js";
 import userRouter from "./routes/userRoute.js";
+import sellerRouter from "./routes/sellerRoute.js";
 // import bestSellersRoutes from "./routes/bestSellers.js";
 dotenv.config();
 
@@ -42,6 +43,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // مسیرهای API
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRouter);
+app.use("/api/seller", sellerRouter);
+
 // app.use("/api/best-sellers", bestSellersRoutes);
 
 // تست سلامت سرور
