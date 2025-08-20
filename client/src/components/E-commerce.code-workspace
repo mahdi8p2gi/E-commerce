@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"path": "../../../../../../mk"
+		},
+		{
+			"path": "E:/c-pr/mrdlearn"
+		},
+		{
+			"path": "../../../../../../note-app"
+		}
+	],
+	"settings": {
+		"postman.settings.dotenv-detection-notification-visibility": false
+	}
+}
