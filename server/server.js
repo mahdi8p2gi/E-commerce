@@ -9,7 +9,8 @@ import connectdb from "./configs/db.js";
 import productRoutes from "./routes/productRoutes.js";
 import userRouter from "./routes/userRoute.js";
 import sellerRouter from "./routes/sellerRoute.js";
-// import bestSellersRoutes from "./routes/bestSellers.js";
+import connectCloudunary from "./configs/cloudinary.js";
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,8 +23,8 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-// اتصال به دیتابیس
-connectdb();
+await connectdb();
+await connectCloudunary();
 
 // Middleware ها
 app.use(express.json()); // برای پردازش JSON
@@ -37,15 +38,11 @@ app.use(
   })
 );
 
-// مسیر فایل‌های آپلود شده
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 // مسیرهای API
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRouter);
 app.use("/api/seller", sellerRouter);
-
-// app.use("/api/best-sellers", bestSellersRoutes);
+app.use("/api/product", productRoutes);
 
 // تست سلامت سرور
 app.get("/", (req, res) => {
@@ -55,4 +52,8 @@ app.get("/", (req, res) => {
 // اجرای سرور
 app.listen(port, () => {
   console.log(`🚀 سرور در حال اجراست: http://localhost:${port}`);
+});
+
+app.use((req, res, next) => {
+  res.status(404).json({ message: `Route not found: ${req.originalUrl}` });
 });
