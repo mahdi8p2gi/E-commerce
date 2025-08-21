@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
+import { useEffect, useState } from "react";
 // Layouts & Shared Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -29,19 +29,26 @@ import WishList from "./pages/WishList";
 import CookiePolicy from "./pages/CookiePolicy";
 import ContactUs from "./pages/ContactUs";
 import NotFound from "./pages/NotFound";
-
+import Loader from "./components/Loader";
 function AppContent() {
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const { showUserLogin } = useAppContext();
 
   // اگر مسیر شامل /seller بود، فرض بگیر پنل ادمین است
   const isSellerPath = location.pathname.startsWith("/seller");
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 1000); // شبیه‌سازی لودینگ
+  }, []);
 
+if (loading) return <Loader />;
   return (
+
     <div className="min-h-screen text-black bg-white">
       {/* Navbar فقط در صفحات عمومی */}
       {!isSellerPath && <Navbar />}
       {showUserLogin && <Login />}
+      
 
       {/* محتوای صفحات */}
       <div

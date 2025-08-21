@@ -1,10 +1,31 @@
-const ProductList = () => {
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useOutletContext } from "react-router-dom"; // Import useOutletContext
 
-    const products = [
-        { name: "Nike Pegasus 41 shoes", category: "Shoes", offerPrice: 999, inStock: true, image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage.png", },
-        { name: "Nike Pegasus 41 shoes", category: "Shoes", offerPrice: 999, inStock: false, image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage2.png", },
-        { name: "Nike Pegasus 41 shoes", category: "Shoes", offerPrice: 999, inStock: true, image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage3.png", },
-    ];
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+
+const ProductList = () => {
+  const { productAdded } = useOutletContext(); // Get the state from context
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.post("/api/product/list"); // Changed to POST and correct endpoint
+        if (response.data.success) {
+          setProducts(response.data.product); // Corrected from products to product
+        } else {
+          console.error("Failed to fetch products:", response.data.message);
+          setProducts([]); // Ensure products is an empty array on failure
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setProducts([]); // Ensure products is an empty array on error
+      }
+    };
+
+    fetchProducts();
+  }, [productAdded]); // Add productAdded to dependency array
 
     return (
         <div className="flex flex-col justify-between flex-1 py-10">

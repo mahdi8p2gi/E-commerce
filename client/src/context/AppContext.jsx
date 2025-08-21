@@ -2,12 +2,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dummyProducts } from "../assets/assets";
 import { toast } from "react-hot-toast";
+import axios from 'axios'
+
+axios.defaults.withCredentials = true
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 
 
-// ایجاد کانتکست
 export const AppContext = createContext();
 
-// Provider برای کل اپ
 export const AppContextProvider = ({ children }) => {
   const url = "https://e-commerce-backend-0zqg.onrender.com"
   const navigate = useNavigate();
@@ -22,6 +24,11 @@ export const AppContextProvider = ({ children }) => {
   const [cartItem, setCartItem] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+
+
+
+
+
 
   // شبیه‌سازی گرفتن محصولات از API
   const fetchProducts = async () => {

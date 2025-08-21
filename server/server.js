@@ -10,6 +10,9 @@ import productRoutes from "./routes/productRoutes.js";
 import userRouter from "./routes/userRoute.js";
 import sellerRouter from "./routes/sellerRoute.js";
 import connectCloudunary from "./configs/cloudinary.js";
+import cartRouter from "./routes/cartRoute.js";
+import addressRouter from "./routes/addressRoute.js";
+import orderRouter from "./routes/orderRoute.js";
 
 dotenv.config();
 
@@ -39,10 +42,16 @@ app.use(
 );
 
 // مسیرهای API
-app.use("/api/products", productRoutes);
+app.use("/api/product", productRoutes);
 app.use("/api/users", userRouter);
 app.use("/api/seller", sellerRouter);
-app.use("/api/product", productRoutes);
+app.use("/api/cart", cartRouter);
+app.use("/api/address", addressRouter);
+app.use("/api/order", orderRouter);
+
+
+
+
 
 // تست سلامت سرور
 app.get("/", (req, res) => {

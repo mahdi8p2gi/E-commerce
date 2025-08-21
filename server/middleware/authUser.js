@@ -3,7 +3,7 @@ import User from "../models/User.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
-export const protect = async (req, res, next) => {
+export const authUser = async (req, res, next) => {
   try {
     const token = req.cookies.token; // 👈 توکن از کوکی گرفته می‌شود
 
@@ -23,3 +23,4 @@ export const protect = async (req, res, next) => {
 };
 
 
+export default authUser

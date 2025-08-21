@@ -1,8 +1,9 @@
-import { Link, NavLink, Outlet} from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { assets } from "../../assets/assets";
+import { useState } from "react"; // Import useState
 
 const SellerLayout = () => {
-  // const navigate = useNavigate();
+  const [productAdded, setProductAdded] = useState(0); // State to trigger refresh
 
   const sidebarLinks = [
     { name: "Add Product", path: "/seller-layout/add-product", icon: assets.add_icon },
@@ -10,21 +11,9 @@ const SellerLayout = () => {
     { name: "Orders", path: "/seller-layout/orders", icon: assets.order_icon },
   ];
 
-  // const logout = async ()=> {
-  //   try {
-  //     // await fetch('api/logout' , {
-  //     //   method : "POST",
-  //     //   credentials : "include"
-  //     // })
-
-  //     // localStorage.removeItem("user")
-  //     navigate('/')
-      
-  //   } catch (error) {
-  //     console.log("خطا در خروج , error")
-  //   }
-  // }
-
+  const handleProductAdded = () => {
+    setProductAdded((prev) => prev + 1);
+  };
 
   return (
     <div className="flex h-screen bg-white">
@@ -69,7 +58,7 @@ const SellerLayout = () => {
         </div>
 
         {/* محتوای داخلی */}
-        <Outlet />
+        <Outlet context={{ productAdded, handleProductAdded }} /> {/* Pass state and handler via context */}
       </main>
     </div>
   );

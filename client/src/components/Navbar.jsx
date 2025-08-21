@@ -168,7 +168,7 @@ function Navbar() {
                     e.currentTarget.src = assets.profile_icon; // اگر تصویر خراب بود عکس پیش‌فرض بذار
                   }}
                 />
-                <span>ali</span>
+                {user?.username && <span>{user.username}</span>} {/* Display username if available */}
               </div>
 
               {profileOpen && (
