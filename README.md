@@ -40,3 +40,31 @@ cd E-commerce
 cd server && npm install
 cd ../client && npm install
 
+Environment Variables
+
+Create a .env file inside /backend:
+
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+PAYMENT_KEY=your_payment_api_key
+
+
+
+Run Development
+
+# Run server
+cd server
+npm run dev
+
+# Run client
+cd client
+npm start
+
+
+Scripts
+
+npm run dev → Run server (nodemon)
+
+npm start → Run client
+
+npm run build → Build client for production
