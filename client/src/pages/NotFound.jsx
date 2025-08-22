@@ -8,7 +8,7 @@ const NotFound = () => {
             <div className="h-1 w-16 rounded bg-primary my-5 md:my-7"></div>
             <p className="text-2xl md:text-3xl font-bold text-gray-800">Page Not Found</p>
             <p className="text-sm md:text-base mt-4 text-gray-500 max-w-md text-center">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
-            <div className="flex items-center gap-4 mt-6">
+            <div className="flex sm:flex-row items-center gap-4 flex-col mt-6">
                 <a href="/" className="bg-primary hover:bg-primary-dull px-7 py-2.5 text-white rounded-md active:scale-95 transition-all">
                     Return Home
                 </a>

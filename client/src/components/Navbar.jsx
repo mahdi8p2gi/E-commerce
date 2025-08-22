@@ -48,11 +48,11 @@ function Navbar() {
   return (
     <div className="">
       <Banner />
-      <nav className="relative flex items-center justify-between px-6 py-4 transition-all bg-white border-b border-gray-300 md:px-16 lg:px-24 xl:px-32">
+      <nav className="relative px-6 flex items-center  justify-between px4 py-4 transition-all bg-white border-b border-gray-300 md:px-16 lg:px-24 xl:px-32">
 
         {/* لوگو */}
         <NavLink to="/" onClick={() => setOpen(false)}>
-          <img src={assets.logo} alt="logo" className="h-10" />
+          <img src={assets.logo} alt="logo" className="h-8 md:h-10" />
         </NavLink>
 
         {/* دکمه داشبورد ادمین */}
@@ -149,7 +149,7 @@ function Navbar() {
           {!user ? (
             <button
               onClick={() => setShowUserLogin(true)}
-              className="px-8 py-2 text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary-dull"
+              className="px-6 py-1 sm:px-8 sm:py-2 text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary-dull"
             >
               Login
             </button>
@@ -186,6 +186,7 @@ function Navbar() {
                       My Orders
                     </li>
                   </NavLink>
+
                   <li
                     className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                     onClick={logout}
@@ -199,13 +200,34 @@ function Navbar() {
         </div>
 
         {/* دکمه موبایل منو */}
-        <button
-          onClick={() => setOpen(!open)}
-          aria-label="Menu"
-          className="sm:hidden p-2 text-2xl text-gray-700 hover:text-gray-900"
-        >
-          <RiMenu3Line />
-        </button>
+
+        <div className="sm:hidden flex items-center gap-2">
+
+          <div
+            onClick={() => navigate("/cart")}
+            className="relative cursor-pointer sm:hidden"
+          >
+            <img
+              src={assets.nav_cart_icon}
+              alt="cart"
+              className="w-6 transition opacity-80 hover:scale-110"
+            />
+            {getCartCount() > 0 && (
+              <span className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] h-[18px] rounded-full flex items-center justify-center">
+                {getCartCount()}
+              </span>
+            )}
+          </div>
+
+          <button
+            onClick={() => setOpen(!open)}
+            aria-label="Menu"
+            className="sm:hidden p-2 text-2xl text-gray-700 hover:text-gray-900"
+          >
+            <RiMenu3Line />
+          </button>
+        </div>
+
 
         {/* منوی موبایل */}
         {open && (
@@ -225,19 +247,29 @@ function Navbar() {
             >
               Products
             </NavLink>
-
             {user && (
-              <NavLink
-                to="/my-orders"
-                onClick={() => setOpen(false)}
-                className="w-full py-1 hover:text-primary"
-              >
-                My Orders
-              </NavLink>
+              <>
+                <NavLink
+                  to="/my-orders"
+                  onClick={() => setOpen(false)}
+                  className="w-full py-1 hover:text-primary"
+                >
+                  My Orders
+                </NavLink>
+
+                <NavLink
+                  to="/profile"
+                  onClick={() => setOpen(false)}
+                  className="w-full py-1 hover:text-primary"
+                >
+                  My Profile
+                </NavLink>
+              </>
             )}
 
+
             <NavLink
-              to="/contact"
+              to="/contact-us"
               onClick={() => setOpen(false)}
               className="w-full py-1 hover:text-primary"
             >
@@ -253,7 +285,7 @@ function Navbar() {
                   }}
                   className="w-full px-6 py-2 text-sm text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary-dull"
                 >
-                  Login | Sign up
+                  Login
                 </button>
               ) : (
                 <button
@@ -268,9 +300,10 @@ function Navbar() {
               )}
             </div>
           </div>
-        )}
-      </nav>
-    </div>
+        )
+        }
+      </nav >
+    </div >
 
   );
 }

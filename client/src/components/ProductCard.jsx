@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
         navigate(`/products/${product.category}/${product._id}`);
         window.scrollTo(0, 0);
       }}
-      className="bg-white border border-gray-200 rounded-md shadow-sm cursor-pointer p-3 w-full max-w-[220px] transition hover:shadow-md"
+      className="bg-white border  border-gray-200 rounded-md shadow-sm cursor-pointer p-3 w-full max-w-[320px] transition hover:shadow-md"
     >
       {/* تصویر */}
       <div className="flex items-center justify-center h-32">

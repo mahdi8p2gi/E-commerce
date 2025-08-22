@@ -29,7 +29,7 @@ function ProductsCategory() {
 
       {/* محصولات یا پیام عدم وجود */}
       {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-2 gap-6 mt-6 sm:grid-cols-3 lg:grid-cols-5 md:grid-cols-4 md:gap-6">
+        <div className="grid grid-cols-2  gap-6 mt-6 sm:grid-cols-3 lg:grid-cols-5 md:grid-cols-4 md:gap-6">
           {filteredProducts.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
