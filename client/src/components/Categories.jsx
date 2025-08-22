@@ -14,8 +14,8 @@ function Categories() {
       </p>
       <div className="w-20 h-1 mb-8 rounded-full bg-primary"></div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
-        {safeCategories.slice(0 ,6).map((category, index) => (
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
+        {safeCategories.map((category, index) => (
           <div
             key={index}
             onClick={() => {
@@ -30,7 +30,7 @@ function Categories() {
               alt={category.text}
               className="transition-transform group-hover:scale-110 max-w-20"
             />
-            <p className="mt-3 text-sm font-medium text-center text-gray-800">
+            <p className="mt-3 text-md font-medium text-center text-gray-800">
               {category.text}
             </p>
           </div>

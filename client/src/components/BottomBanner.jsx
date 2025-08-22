@@ -2,7 +2,7 @@ import { assets, features } from "../assets/assets";
 
 function BottomBanner() {
   return (
-    <div className="relative mt-24">
+    <div className="relative mt-24 ">
       {/* تصویر دسکتاپ */}
       <img
       loading="lazy"

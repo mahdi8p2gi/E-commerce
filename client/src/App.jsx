@@ -34,14 +34,23 @@ const Login = lazy(() => import("./components/Login"));
 
 function AppContent() {
   const location = useLocation();
-  const { showUserLogin, isLoading } = useAppContext();
+  const { showUserLogin } = useAppContext();
+  const [appLoading, setAppLoading] = useState(true);
 
   const isSellerPath = location.pathname.startsWith("/seller");
-  
-  if (isLoading) return <Loader />;
+
+  useEffect(() => {
+    // وقتی کامپوننت mount شد، یک تایمر کوتاه می‌زنیم تا Loader برای مدتی نمایش داده شود
+    const timer = setTimeout(() => {
+      setAppLoading(false);
+    }, 500); // یا 0 هم می‌توانید بگذارید، فقط برای جلوگیری از flicker
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (appLoading) return <Loader />;
+
   return (
     <div className="min-h-screen text-black bg-white">
-      {/* Navbar فقط در صفحات عمومی */}
       {!isSellerPath && <Navbar />}
       {showUserLogin && (
         <Suspense fallback={<Loader />}>
@@ -49,15 +58,11 @@ function AppContent() {
         </Suspense>
       )}
 
-      {/* محتوای صفحات */}
-      <div
-        className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}
-      >
+      <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
         <Toaster />
 
         <Suspense fallback={<Loader />}>
           <Routes>
-            {/* مسیرهای کاربران عادی */}
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<AllProducts />} />
             <Route path="/products/:category" element={<ProductsCategory />} />
@@ -69,7 +74,6 @@ function AppContent() {
             <Route path="/wishlist" element={<WishList />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
-            {/* مسیرهای پنل فروشنده (ادمین) */}
             <Route path="/seller-layout" element={<SellerLayout />}>
               <Route index element={<Navigate to="add-product" replace />} />
               <Route path="add-product" element={<AddProduct />} />
@@ -82,7 +86,6 @@ function AppContent() {
         </Suspense>
       </div>
 
-      {/* Footer و ChatBot فقط در صفحات عمومی */}
       {!isSellerPath && <Footer />}
       {!isSellerPath && <ChatWidget />}
     </div>
