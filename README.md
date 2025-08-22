@@ -1,15 +1,41 @@
-﻿# E-Commerce Web App
+# MERN E-Commerce Store 🛒
 
-یک وب‌اپلیکیشن فروشگاهی با **React** برای فرانت‌اند و **Node.js / Express** برای بک‌اند (در حال توسعه).  
-این پروژه هنوز کامل نیست و بک‌اند آن در حال پیاده‌سازی است.
-
----
-
-## 📌 وضعیت پروژه
-🚧 **در حال توسعه** – بخش بک‌اند هنوز کامل نشده است.  
-فرانت‌اند قابل اجرا و تست است.
+A full-stack e-commerce application built with **MongoDB, Express, React, and Node.js (MERN)**.  
+The app includes user authentication, admin dashboard, product management, and order tracking.
 
 ---
 
-## 📂 ساختار پوشه‌ها
+## Features
+- 🔐 User authentication (JWT, bcrypt)
+- 👤 Role-based access (Admin & Customer)
+- 🛍️ Product listing, categories, and search
+- 🛒 Shopping cart & checkout
+- 💳 Payment integration (Stripe)
+- 📦 Order management (for admin)
+- 📱 Responsive UI (React + Tailwind)
 
+---
+
+## Tech Stack
+- **Frontend:** React, React Router, Context API, Axios  
+- **Backend:** Express, Node.js, Mongoose  
+- **Database:** MongoDB Atlas  
+- **Deployment:** Render 
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js >= 16
+- MongoDB Atlas account (or local MongoDB)
+
+### Installation
+```bash
+# Clone repo
+git clone https://github.com/your-username/mern-store.git
+cd mern-store
+
+# Install dependencies
+cd backend && npm install
+cd ../frontend && npm install
