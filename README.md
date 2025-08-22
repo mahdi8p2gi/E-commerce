@@ -33,9 +33,10 @@ The app includes user authentication, admin dashboard, product management, and o
 ### Installation
 ```bash
 # Clone repo
-git clone https://github.com/your-username/mern-store.git
-cd mern-store
+git clone https://github.com/mahdi8p2gi/E-commerce.githttps://github.com/mahdi8p2gi/E-commerce.git
+cd E-commerce 
 
 # Install dependencies
-cd backend && npm install
-cd ../frontend && npm install
+cd server && npm install
+cd ../client && npm install
+
