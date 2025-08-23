@@ -30,8 +30,8 @@ const Testimonial = () => {
             text: "Very easy to navigate. The product categories make finding items super simple."
         },
     ];
-
-    // داده‌های ردیف پایین
+    // assset
+    // داده‌های ردیف پایین 
     const cardsBottom = [
         {
             image: "https://i.pravatar.cc/200?img=21",
@@ -66,6 +66,7 @@ const Testimonial = () => {
     const CreateCard = ({ card }) => (
         <div className="p-4 rounded-lg mx-4 mt-8 shadow hover:shadow-lg transition-all duration-200 w-72 shrink-0 bg-white">
             <div className="flex gap-2">
+
                 <img className="size-11 rounded-full" src={card.image} alt="User" />
                 <div className="flex flex-col">
                     <div className="flex items-center gap-1">
@@ -110,6 +111,13 @@ const Testimonial = () => {
         `}</style>
 
             {/* ردیف بالا */}
+            <div className="mt-[4rem]">
+                <p className="mb-4 text-2xl font-semibold text-gray-800 md:text-3xl">
+                   Customer Reviews
+                </p>
+                <div className="w-[150px] h-1 mb-8 rounded-full bg-primary"></div>
+            </div>
+
             <div className="marquee-row w-full mx-auto max-w-5xl overflow-hidden relative">
                 <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-white to-transparent"></div>
                 <div className="marquee-inner flex transform-gpu min-w-[200%] pt-10 pb-5">

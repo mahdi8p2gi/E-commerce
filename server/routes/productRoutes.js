@@ -7,10 +7,8 @@ import { addProduct, productById, productList } from "../controllers/productCont
 const productRouter = express.Router();
 
 
-productRouter.post("/add", upload.array("images"), addProduct);
-
-productRouter.post("/list", productList);
-productRouter.post("/id", productById);
+productRouter.post("/add", upload.array(["images"]), addProduct);
+productRouter.get("/list", productList);
+productRouter.get("/id", productById);
 
 export default productRouter;
-

@@ -1,3 +1,4 @@
+import FAQ from '../pages/FAQ'
 import BestSeller from "../components/BestSeller"
 import BottomBanner from "../components/BottomBanner"
 import Categories from "../components/Categories"
@@ -15,7 +16,8 @@ function Home() {
       <BestSeller />
       <BottomBanner />
       <Testimonial />
-      <NewsLetter />  
+      <NewsLetter />
+      <FAQ />
       <ScrollToTopButton />
     </div>
   )

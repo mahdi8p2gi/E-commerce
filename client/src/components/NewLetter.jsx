@@ -1,7 +1,7 @@
 const NewsLetter  = () => {
     
     return (
-        <div className="flex flex-col items-center justify-center mt-24 space-y-2 text-center pb-14">
+        <div className="flex flex-col items-center justify-center mt-[96px] pt-[46px] space-y-2 text-center pb-[115px]">
             <h1 className="text-2xl font-semibold md:text-4xl">Never Miss a Deal!</h1>
             <p className="pb-8 md:text-lg text-gray-500/70">
                 Subscribe to get the latest offers, new arrivals, and exclusive discounts

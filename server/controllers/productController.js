@@ -6,24 +6,39 @@ import Product from "../models/Product.js";
 // add product : /api/product/add
 export const addProduct = async (req, res) => {
   try {
-    let productData = JSON.parse(req.body.productData);
-    const images = req.file;
+    // Parse محصول
+    const productData = JSON.parse(req.body.productData);
+
+    // بررسی فایل‌ها
+    const images = req.files || []; // اگر هیچ فایلی نبود آرایه خالی
+
+    // آپلود تصاویر روی Cloudinary
     let imageUrl = await Promise.all(
-      images.map(async (item) => {
-        let result = await cloudinary.uploader.upload(item.path, {
+      images.map(async (file) => {
+        const result = await cloudinary.uploader.upload(file.path, {
           resource_type: "image",
         });
         return result.secure_url;
       })
     );
 
-    await Product.create({ ...productData, image: imageUrl });
-    res.json({ success: true, message: "Product added" });
+    // ایجاد محصول در دیتابیس
+    const newProduct = await Product.create({
+      ...productData,
+      image: imageUrl, // آرایه URL ها
+    });
+
+    res.json({
+      success: true,
+      message: "Product added",
+      product: newProduct,
+    });
   } catch (error) {
     console.log(error.message);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // Get product : /api/product/list
 export const productList = async (req, res) => {
