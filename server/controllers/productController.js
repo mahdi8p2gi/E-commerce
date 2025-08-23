@@ -8,6 +8,7 @@ export const addProduct = async (req, res) => {
   try {
     // Parse محصول
     const productData = JSON.parse(req.body.productData);
+    productData.category = productData.category.toLowerCase();
 
     // بررسی فایل‌ها
     const images = req.files || []; // اگر هیچ فایلی نبود آرایه خالی
@@ -44,7 +45,7 @@ export const addProduct = async (req, res) => {
 export const productList = async (req, res) => {
   try {
     const product = await Product.find({});
-    res.json({ success: true, product });
+    res.json({ success: true, products: product });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });

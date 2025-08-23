@@ -1,8 +1,9 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { categories } from "../../assets/assets";
 
-axios.defaults.baseURL = "http://localhost:5000"; // پایه URL سرور
+
 
 const AddProduct = () => {
   const [files, setFiles] = useState([null, null, null, null]); // ۴ جای آپلود
@@ -43,9 +44,9 @@ const AddProduct = () => {
         if (file) formData.append("images", file);
       });
 
-      const { data } = await axios.post("/api/product/add", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const { data } = await axios.post("http://localhost:5000/api/product/add", formData)
+       
+   
 
       if (data.success) {
         toast.success(data.message);
@@ -61,7 +62,7 @@ const AddProduct = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
+      toast.error(error.message);
     }
   };
 
@@ -150,11 +151,11 @@ const AddProduct = () => {
             className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
           >
             <option value="">Select Category</option>
-            {["Cold Drinks", "Clothing", "Accessories"].map((item, index) => (
-              <option key={index} value={item}>
-                {item}
-              </option>
-            ))}
+            {categories.map((item, index) => (
+                <option key={index} value={item.path}>
+                  {item.text}
+                </option>
+              ))}
           </select>
         </div>
 

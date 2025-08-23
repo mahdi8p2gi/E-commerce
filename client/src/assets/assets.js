@@ -194,8 +194,6 @@ export const features = [
 ];
 
 export const dummyProducts = [
-  // Vegetables
-
 
 
   {

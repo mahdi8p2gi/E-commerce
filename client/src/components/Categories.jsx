@@ -4,8 +4,8 @@ import { useAppContext } from "../context/AppContext";
 function Categories() {
   const { navigate } = useAppContext();
 
-  // اگر categories undefined بود، به جای آن آرایه خالی قرار می‌دهیم
-  const safeCategories = categories || [];
+
+
 
   return (
     <div className="mt-16 bg-white">
@@ -15,7 +15,7 @@ function Categories() {
       <div className="w-20 h-1 mb-8 rounded-full bg-primary"></div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
-        {safeCategories.map((category, index) => (
+        {categories.map((category, index) => (
           <div
             key={index}
             onClick={() => {

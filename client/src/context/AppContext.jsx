@@ -7,11 +7,9 @@ import axios from 'axios'
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 
-
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
-  const url = "https://e-commerce-backend-0zqg.onrender.com"
   const navigate = useNavigate();
   const currency = process.env.REACT_APP_CURRENCY || "$";
 
@@ -20,28 +18,28 @@ export const AppContextProvider = ({ children }) => {
 
   const [isSeller, setIsSeller] = useState(false);
   const [showUserLogin, setShowUserLogin] = useState(false);
+
+  // مقدار اولیه products آرایه خالی است تا filter همیشه کار کند
   const [products, setProducts] = useState([]);
   const [cartItem, setCartItem] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  const [wishlist, setWishlist] = useState([]);
 
-
-
-
-
-
+  // بارگذاری اولیه محصولات
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/product/list")
-      if (data.success) {
-        setProducts(data.products)
+      const { data } = await axios.get("http://localhost:5000/api/product/list");
+      if (data.success && Array.isArray(data.products)) {
+        setProducts(data.products);
       } else {
-        toast.error(data.message)
-
+        setProducts([]); // اگر داده‌ها مشکل داشت، حداقل آرایه خالی بگذار
+        toast.error(data.message || "Failed to fetch products");
       }
     } catch (error) {
-      toast.error(error.message)
+      setProducts([]);
+      toast.error(error.message || "Failed to fetch products");
     }
   };
 
@@ -57,7 +55,6 @@ export const AppContextProvider = ({ children }) => {
     toast.success("Added to cart");
   };
 
-  // بروزرسانی تعداد یک آیتم
   const updateCartItem = (itemID, quantity) => {
     const cartData = structuredClone(cartItem);
     if (quantity === 0) {
@@ -69,7 +66,6 @@ export const AppContextProvider = ({ children }) => {
     toast.success("Cart updated");
   };
 
-  // حذف یک آیتم از سبد
   const removeFromCart = (itemID) => {
     const cartData = structuredClone(cartItem);
     if (cartData[itemID]) {
@@ -82,7 +78,6 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
-  // جمع کل تعداد محصولات سبد
   const getCartCount = () => {
     let totalCount = 0;
     for (const item in cartItem) {
@@ -91,7 +86,6 @@ export const AppContextProvider = ({ children }) => {
     return totalCount;
   };
 
-  // جمع قیمت کل سبد خرید
   const getCartAmount = () => {
     let totalAmount = 0;
     for (const item in cartItem) {
@@ -112,9 +106,6 @@ export const AppContextProvider = ({ children }) => {
     }
   }, [user]);
 
-
-  const [wishlist, setWishlist] = useState([]);
-
   const addToWishlist = (product) => {
     if (!wishlist.find(item => item._id === product._id)) {
       setWishlist([...wishlist, product]);
@@ -125,7 +116,7 @@ export const AppContextProvider = ({ children }) => {
     setWishlist(wishlist.filter(item => item._id !== id));
   };
 
-  // بارگذاری اولیه محصولات
+  // بارگذاری محصولات در ابتدا
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -138,7 +129,7 @@ export const AppContextProvider = ({ children }) => {
     setIsSeller,
     showUserLogin,
     setShowUserLogin,
-    products,
+    products, // همیشه آرایه، هرگز undefined
     currency,
     cartItem,
     addToCart,
@@ -152,11 +143,12 @@ export const AppContextProvider = ({ children }) => {
     getCartCount,
     wishlist,
     addToWishlist,
-    removeFromWishlist, axios , fetchProducts
+    removeFromWishlist,
+    axios,
+    fetchProducts
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
-// هوک اختصاصی برای استفاده راحت از کانتکست
 export const useAppContext = () => useContext(AppContext);

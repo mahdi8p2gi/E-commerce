@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
-import ChatWidget from "./components/ChatWidget";
+
 
 // Context
 import { useAppContext } from "./context/AppContext";
@@ -82,9 +82,8 @@ if (loading) return <Loader />;
         </Routes>
       </div>
 
-      {/* Footer و ChatBot فقط در صفحات عمومی */}
       {!isSellerPath && <Footer />}
-      {!isSellerPath && <ChatWidget />}
+    
     </div>
   );
 }
