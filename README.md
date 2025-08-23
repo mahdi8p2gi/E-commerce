@@ -33,7 +33,7 @@ The app includes user authentication, admin dashboard, product management, and o
 ### Installation
 ```bash
 # Clone repo
-git clone https://github.com/mahdi8p2gi/E-commerce.githttps://github.com/mahdi8p2gi/E-commerce.git
+git clone https://github.com/mahdi8p2gi/E-commerce.git
 cd E-commerce 
 
 # Install dependencies
@@ -68,3 +68,4 @@ npm run dev → Run server (nodemon)
 npm start → Run client
 
 npm run build → Build client for production
+
