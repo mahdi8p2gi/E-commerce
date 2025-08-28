@@ -1,9 +1,9 @@
-
 import "../index.css"; 
 
 const Loader = () => {
   return (
     <div className="w-full h-screen flex justify-center items-center">
+      {/* Animated pill bars */}
       <span
         className="
           relative inline-block
@@ -25,6 +25,7 @@ const Loader = () => {
             "0px 90px, 15px 78px, 30px 66px, 45px 58px, 60px 50px",
         }}
       >
+        {/* Animated bouncing ball */}
         <span
           className="
             absolute bottom-[10px] left-0 

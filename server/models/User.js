@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
     avatar: { type: String },
+    isBanned: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

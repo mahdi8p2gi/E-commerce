@@ -3,23 +3,19 @@ import { useEffect, useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
 
 const ScrollToTopButton = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false); // Track visibility
 
-  // بررسی موقعیت اسکرول کاربر
+  //  Track scroll position to toggle button visibility
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.scrollY > 300);
     };
 
     window.addEventListener("scroll", toggleVisibility);
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
-  // تابع اسکرول نرم به بالا
+  //  Smooth scroll to top
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -27,6 +23,7 @@ const ScrollToTopButton = () => {
     });
   };
 
+  // Render button only when visible
   return isVisible ? (
     <button
       onClick={scrollToTop}

@@ -5,235 +5,211 @@ import ProductCard from "../components/ProductCard";
 import toast, { Toaster } from "react-hot-toast";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import * as Tooltip from "@radix-ui/react-tooltip";
-
+import axios from "axios";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
-  const { category, id } = useParams();
+  const { id } = useParams();
   const { products, addToCart } = useAppContext();
 
   const [product, setProduct] = useState(null);
   const [thumbnail, setThumbnail] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [isLikedIcon, setIsLikedIcon] = useState(false)
+  const [isLikedIcon, setIsLikedIcon] = useState(false);
 
-  // Comments
-  const [comments, setComments] = useState([
-    {
-      text: "Great product 👌",
-      user: "Ali",
-      likes: 2,
-      dislikes: 0,
-      replies: [{ text: "Totally agree", user: "Sara" }],
-      userAction: null,
-    },
-    {
-      text: "Didn't work for me.",
-      user: "Reza",
-      likes: 0,
-      dislikes: 1,
-      replies: [],
-      userAction: null,
-    },
-  ]);
-
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-  const [sortOrder, setSortOrder] = useState("oldest");
-  const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState("");
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [sortOrder, setSortOrder] = useState("oldest");
 
-  const handleWishListIcon = () => {
-    setIsLikedIcon(!isLikedIcon)
-  }
-
-
+  // Load product & related products
   useEffect(() => {
-    const found = products.find((item) => item._id === id);
-    if (found) {
-      setProduct(found);
-      setThumbnail(found.image[0]);
-      const related = products.filter(
-        (item) => item.category === found.category && item._id !== found._id
-      );
-      setRelatedProducts(related);
-    }
+    if (!products?.length || !id) return;
+    const found = products.find((p) => p._id === id);
+    if (!found) return;
+
+    setProduct(found);
+    setThumbnail(found.image?.[0] || "");
+    setRelatedProducts(products.filter((p) => p.category === found.category && p._id !== found._id));
   }, [id, products]);
 
-  const handleCommentSubmit = (e) => {
+  // Load comments from backend
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchComments = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/comments/${id}`)
+          ;
+
+        if (res.data.message) {
+          // اگر پیام برگشت، آرایه خالی قرار بده
+          setComments([]);
+          toast.info(res.data.message);
+        } else {
+          setComments(res.data.comments || []);
+        }
+      } catch {
+        toast.error("Failed to load comments");
+      }
+    };
+
+    fetchComments();
+  }, [id]);
+
+  const toggleWishlist = () => setIsLikedIcon((prev) => !prev);
+
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
+    if (!newComment.trim()) return toast.error("Please enter your comment!");
 
-    if (!newComment.trim()) {
-      toast.error("Please enter your comment!");
-      return;
-    }
-
-    setComments((prev) => [
-      ...prev,
-      {
-        text: newComment,
+    try {
+      const res = await axios.post("http://localhost:5000/api/comments", {
+        productId: id,
         user: "Guest",
-        likes: 0,
-        dislikes: 0,
-        replies: [],
-        date: new Date().toISOString(),
-      },
-    ]);
-    setNewComment("");
-    toast.success("Comment submitted!");
-  };
-
-
-
-  const handleLike = (index) => {
-    const updated = [...comments];
-    const comment = updated[index];
-
-    if (comment.userAction === "like") return;
-
-    if (comment.userAction === "dislike") {
-      comment.dislikes -= 1;
-      comment.likes += 1;
-      comment.userAction = "like";
-    } else {
-      comment.likes += 1;
-      comment.userAction = "like";
+        text: newComment.trim(),
+      });
+      setComments((prev) => [res.data, ...prev]);
+      setNewComment("");
+      toast.success("Comment submitted!");
+    } catch {
+      toast.error("Failed to submit comment");
     }
-
-    setComments(updated);
   };
 
-  const handleDislike = (index) => {
-    const updated = [...comments];
-    const comment = updated[index];
-
-    if (comment.userAction === "dislike") return;
-
-    if (comment.userAction === "like") {
-      comment.likes -= 1;
-      comment.dislikes += 1;
-      comment.userAction = "dislike";
-    } else {
-      comment.dislikes += 1;
-      comment.userAction = "dislike";
+  const handleReply = async (commentId) => {
+    if (!replyText.trim()) return toast.error("Reply cannot be empty!");
+    try {
+      const res = await axios.post(`http://localhost:5000/api/comments/${commentId}/reply`, {
+        user: "Guest",
+        text: replyText.trim(),
+      });
+      setComments((prev) => prev.map((c) => (c._id === commentId ? res.data : c)));
+      setReplyText("");
+      setReplyingTo(null);
+      toast.success("Reply added!");
+    } catch {
+      toast.error("Failed to submit reply");
     }
-
-    setComments(updated);
   };
 
-  const handleReport = (index) => {
-    toast.success("Thanks for your feedback!");
+  const handleLike = async (commentId) => {
+    try {
+      const res = await axios.post(`http://localhost:5000/api/comments/${commentId}/like`);
+
+      setComments((prev) => prev.map((c) => (c._id === commentId ? res.data : c)));
+    } catch {
+      toast.error("Failed to like comment");
+    }
   };
 
-  const handleReply = (index) => {
-    if (!replyText.trim()) {toast.error("input is empty")} return 
-    const updated = [...comments];
-    updated[index].replies.push({ text: replyText, user: "Guest" });
-    setComments(updated);
-    setReplyingTo(null);
-    setReplyText("");
+  const handleDislike = async (commentId) => {
+    try {
+      const res = await axios.post(`http://localhost:5000/api/comments/${commentId}/dislike`);
+
+      setComments((prev) => prev.map((c) => (c._id === commentId ? res.data : c)));
+    } catch {
+      toast.error("Failed to dislike comment");
+    }
   };
 
-  if (!product) return <p className="p-6 text-lg">Product not found.</p>;
-
-
+  if (!product) return <p className="p-6 text-lg text-center">Product not found.</p>;
 
   return (
-    <div className="w-full max-w-6xl px-6 mx-auto mt-20">
+    <div className="w-full max-w-6xl px-4 mx-auto mt-20">
       <Toaster />
       <p className="text-sm text-gray-500">
-        Home / Products / {product.category} /{" "}
-        <span className="text-indigo-500">{product.name}</span>
+        Home / Products / {product?.category} / <span className="text-primary">{product?.name}</span>
       </p>
 
+      {/* Product Section */}
       <div className="flex flex-col gap-10 mt-6 md:flex-row">
-        <div className="flex gap-4">
+        <div className="flex gap-4 flex-shrink-0">
           <div className="flex flex-col gap-3">
-            {product.image.map((img, i) => (
+            {product?.image?.map((img, i) => (
               <img
-              loading="lazy"
                 key={i}
                 src={img}
+                alt="product-img"
                 onClick={() => setThumbnail(img)}
-                className="object-cover w-20 h-20 border rounded cursor-pointer"
+                className={`object-cover w-20 h-20 border rounded cursor-pointer transition-all duration-300 ${thumbnail === img ? "ring-2 ring-primary" : ""
+                  }`}
               />
             ))}
           </div>
           <img
-          loading="lazy"
             src={thumbnail}
-            className="object-contain border rounded w-72 h-72"
+            alt={product?.name}
+            className="object-contain border rounded w-72 h-72 md:w-80 md:h-80"
           />
         </div>
 
-        <div className="flex flex-col justify-between w-full md:w-1/2">
+        <div className="flex flex-col justify-between w-full">
           <div>
             <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-semibold">{product.name}</h1>
+              <h1 className="text-2xl font-semibold">{product?.name}</h1>
               <Tooltip.Provider delayDuration={100}>
                 <Tooltip.Root>
                   <Tooltip.Trigger asChild>
-                    <div onClick={handleWishListIcon}>
-                      {isLikedIcon
-                        ? <FaHeart onClick={handleWishListIcon} className="text-xl text-red-500 transition cursor-pointer hover:scale-110" />
-                        : <FaRegHeart onClick={handleWishListIcon} className="text-xl text-red-500 transition cursor-pointer hover:scale-110" />
-                      }
+                    <div>
+                      {isLikedIcon ? (
+                        <FaHeart onClick={toggleWishlist} className="text-xl text-red-500 cursor-pointer transition hover:scale-110" />
+                      ) : (
+                        <FaRegHeart onClick={toggleWishlist} className="text-xl text-red-500 cursor-pointer transition hover:scale-110" />
+                      )}
                     </div>
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
-                    <Tooltip.Content
-                      className="z-50 px-3 py-1 text-xs text-white rounded shadow-md bg-primary animate-fade-in"
-                      side="bottom"
-                      sideOffset={5}
-
-                    >
-
-                      {isLikedIcon ? "remove from wishlist" : "add to wishlist"}
-
+                    <Tooltip.Content className="z-50 px-3 py-1 text-xs text-white rounded shadow-md bg-primary" side="bottom" sideOffset={5}>
+                      {isLikedIcon ? "Remove from wishlist" : "Add to wishlist"}
                     </Tooltip.Content>
                   </Tooltip.Portal>
                 </Tooltip.Root>
               </Tooltip.Provider>
             </div>
 
-
-            <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+            <p className="mt-1 text-sm text-gray-500 capitalize">{product?.category}</p>
             <div className="flex items-center gap-1 mt-2">
               {[...Array(5)].map((_, i) => (
-                <span key={i}>{i < product.rating ? "⭐" : "☆"}</span>
+                <span key={i}>{i < (product?.rating || 0) ? "⭐" : "☆"}</span>
               ))}
-              <span className="ml-2 text-gray-500">({product.rating})</span>
+              <span className="ml-2 text-gray-500">({product?.rating || 0})</span>
             </div>
+
             <div className="mt-4">
-              <p className="text-gray-500 line-through">${product.price}</p>
-              <p className="text-2xl font-semibold text-primary">
-                ${product.offerPrice}
-              </p>
-              <p className="mt-1 text-sm text-gray-400">
-                (inclusive of all taxes)
-              </p>
+              {product?.offerPrice && product.offerPrice < product.price ? (
+                <>
+                  <p className="text-gray-400 line-through">${product.price}</p>
+                  <p className="text-2xl font-semibold text-primary">${product.offerPrice}</p>
+                </>
+              ) : (
+                <p className="text-2xl font-semibold text-primary">${product.price}</p>
+              )}
+              <p className="mt-1 text-sm text-gray-400">(inclusive of all taxes)</p>
             </div>
+
             <div className="mt-6">
               <p className="mb-2 text-base font-semibold">About Product:</p>
               <ul className="text-sm text-gray-600 list-disc list-inside">
-                {product.description.map((desc, i) => (
+                {product?.description?.map((desc, i) => (
                   <li key={i}>{desc}</li>
                 ))}
               </ul>
             </div>
           </div>
-          <div className="flex gap-4 mt-8">
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 mt-6 flex-wrap">
             <button
               onClick={() => addToCart(product._id)}
-              className="w-full py-3 font-medium text-gray-700 bg-gray-100 hover:bg-gray-200"
+              className="flex-1 py-3 font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all rounded"
             >
               Add to Cart
             </button>
             <button
-              onClick={() => {
-                addToCart(product._id);
-                navigate("/cart");
-              }}
-              className="w-full py-3 font-medium text-white bg-primary hover:bg-primary-dull"
+              onClick={() => { addToCart(product._id); navigate("/cart"); }}
+              className="flex-1 py-3 font-medium text-white bg-primary hover:bg-primary-dull transition-all rounded"
             >
               Buy Now
             </button>
@@ -241,14 +217,13 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      {/* Comments */}
+      {/* Comments Section */}
       <div className="mt-20">
         <div className="flex items-center justify-between">
-          <div className="">
+          <div>
             <h2 className="text-xl font-semibold">User Comments</h2>
             <div className="w-20 h-0.5 rounded-full bg-primary mt-2"></div>
           </div>
-
 
           <select
             className="p-1 text-sm border rounded"
@@ -260,93 +235,100 @@ const ProductDetails = () => {
           </select>
         </div>
 
-        <form onSubmit={handleCommentSubmit} className="flex mt-4 space-x-2">
+        {/* فرم ثبت کامنت */}
+        <form
+          onSubmit={handleCommentSubmit}
+          className="flex mt-4 space-x-2"
+        >
           <input
             type="text"
-            className="w-full px-4 py-2 border rounded"
+            className="flex-1 px-4 py-2 border rounded focus:outline-primary"
             placeholder="Write your comment..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           />
           <button
             type="submit"
-            className="px-4 py-2 text-white rounded bg-primary"
+            className="px-4 py-2 text-white rounded bg-primary hover:bg-primary-dull transition-all"
           >
             Submit
           </button>
         </form>
 
+        {/* commnets*/}
         <div className="mt-6 space-y-6">
-          {[...comments]
-            .sort((a, b) =>
-              sortOrder === "newest"
-                ? comments.indexOf(b) - comments.indexOf(a)
-                : comments.indexOf(a) - comments.indexOf(b)
-            )
-            .map((comment, index) => (
-              <div
-                key={index}
-                className="p-4 border rounded shadow-sm bg-gray-50"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-400">
-                    {new Date(comment.date).toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-
-                  <button
-                    onClick={() => handleReport(index)}
-                    className="text-xs text-red-500 hover:underline"
-                  >
-                    Report
-                  </button>
-                </div>
-                <p className="mt-1">{comment.text}</p>
-
-                <div className="flex gap-4 mt-2 text-sm text-gray-500">
-                  <button onClick={() => handleLike(index)}>
-                    👍 {comment.likes}
-                  </button>
-                  <button onClick={() => handleDislike(index)}>
-                    👎 {comment.dislikes}
-                  </button>
-                  <button onClick={() => setReplyingTo(index)}>🗨 Reply</button>
-                </div>
-
-                {comment.replies.length > 0 && (
-                  <div className="pl-4 mt-3 space-y-1 border-l">
-                    {comment.replies.map((reply, i) => (
-                      <div key={i} className="text-sm text-gray-700">
-                        <strong>{reply.user}:</strong> {reply.text}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {replyingTo === index && (
-                  <div className="mt-2">
-                    <input
-                      type="text"
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="Write a reply..."
-                      className="w-full px-3 py-1 mt-1 text-sm border rounded"
-                    />
+          {comments.length === 0 ? (
+            <p className="text-gray-500 mt-4 text-center">
+              There is no comment fro this product yet            </p>
+          ) : (
+            [...comments]
+              .sort((a, b) =>
+                sortOrder === "newest"
+                  ? new Date(b.date) - new Date(a.date)
+                  : new Date(a.date) - new Date(b.date)
+              )
+              .map((comment) => (
+                <div
+                  key={comment._id}
+                  className="p-4 border rounded shadow-sm bg-gray-50"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-400">
+                      {new Date(comment.date).toLocaleString()}
+                    </p>
                     <button
-                      onClick={() => handleReply(index)}
-                      className="px-3 py-1 mt-1 text-sm text-white rounded bg-primary"
+                      onClick={() => toast.success("Thanks for your feedback!")}
+                      className="text-xs text-red-500 hover:underline"
                     >
-                      Send Reply
+                      Report
                     </button>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  <p className="mt-1">{comment.text}</p>
+
+                  <div className="flex gap-4 mt-2 text-sm text-gray-500">
+                    <button onClick={() => handleLike(comment._id)}>
+                      👍 {comment.likes || 0}
+                    </button>
+                    <button onClick={() => handleDislike(comment._id)}>
+                      👎 {comment.dislikes || 0}
+                    </button>
+                    <button onClick={() => setReplyingTo(comment._id)}>🗨 Reply</button>
+                  </div>
+
+                  {comment.replies?.length > 0 && (
+                    <div className="pl-4 mt-3 space-y-1 border-l">
+                      {comment.replies.map((reply) => (
+                        <div
+                          key={reply._id || reply.text}
+                          className="text-sm text-gray-700"
+                        >
+                          <strong>{reply.user}:</strong> {reply.text}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {replyingTo === comment._id && (
+                    <div className="mt-2 flex flex-col gap-2">
+                      <input
+                        type="text"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Write a reply..."
+                        className="w-full px-3 py-1 text-sm border rounded focus:outline-primary"
+                      />
+                      <button
+                        onClick={() => handleReply(comment._id)}
+                        className="px-3 py-1 text-sm text-white rounded bg-primary hover:bg-primary-dull transition-all w-max"
+                      >
+                        Send Reply
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))
+          )}
         </div>
       </div>
 
@@ -357,20 +339,15 @@ const ProductDetails = () => {
           <div className="w-20 h-0.5 rounded-full bg-primary mt-2"></div>
         </div>
 
-        <div className="grid w-full grid-cols-2 gap-3 mt-6 sm:grid-cols-3 md:grid-cols-4 md:gap-6 lg:grid-cols-5">
-          {relatedProducts
-            .filter((item) => item.inStock)
-            .map((item, index) => (
-              <ProductCard key={index} product={item} />
-            ))}
+        <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-6">
+          {relatedProducts.filter((p) => p.inStock).map((p) => (
+            <ProductCard key={p._id} product={p} />
+          ))}
         </div>
 
         <button
-          className="px-12 mx-auto my-16 cursor-pointer py-2.5 border rounded text-primary hover:bg-primary/10 transition"
-          onClick={() => {
-            navigate("/products");
-            window.scrollTo(0, 0);
-          }}
+          className="px-12 py-2.5 mt-12 border rounded text-primary hover:bg-primary/10 transition-all"
+          onClick={() => { navigate("/products"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
         >
           View All Products
         </button>

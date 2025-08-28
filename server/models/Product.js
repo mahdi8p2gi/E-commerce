@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
   description: [{ type: String }], // آرایه از توضیحات
   image: [{ type: String }],       // آرایه از لینک‌های تصویر
   bestSeller: { type: Boolean, default: false },
+  offerPrice : {type: Number},
   inStock: { type: Boolean, default: true }, // موجودی محصول
 }, { timestamps: true });
 

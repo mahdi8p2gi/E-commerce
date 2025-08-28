@@ -1,15 +1,11 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { assets } from "../../assets/assets";
+import { assets, sidebarLinks } from "../../assets/assets";
 import { useState } from "react"; // Import useState
 
 const SellerLayout = () => {
   const [productAdded, setProductAdded] = useState(0); // State to trigger refresh
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const sidebarLinks = [
-    { name: "Add Product", path: "/seller-layout/add-product", icon: assets.add_icon },
-    { name: "Product List", path: "/seller-layout/products-list", icon: assets.product_list_icon },
-    { name: "Orders", path: "/seller-layout/orders", icon: assets.order_icon },
-  ];
 
   const handleProductAdded = () => {
     setProductAdded((prev) => prev + 1);
@@ -18,11 +14,25 @@ const SellerLayout = () => {
   return (
     <div className="flex h-screen bg-white">
       {/* Sidebar */}
-      <aside className="flex flex-col w-64 px-2 pt-6 border-r border-gray-300">
+      <aside
+        className={`fixed z-20 inset-y-0 left-0 w-64 px-2 pt-6 border-r border-gray-300 bg-white transform transition-transform duration-200 ease-in-out
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        md:static md:translate-x-0`}
+      >
         {/* لوگو */}
-        <Link to="/" className="mb-8 text-center">
-          <img src={assets.logo} alt="logo" className="mx-auto w-36" />
-        </Link>
+        <div className="flex items-center justify-between mb-8 px-2">
+          <Link to="/">
+            <img src={assets.logo} alt="logo" className="w-36" />
+          </Link>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setIsSidebarOpen(false); }}
+            className="p-2 md:hidden"
+            aria-label="Close sidebar"
+          >
+            ✕
+          </button>
+        </div>
 
         {/* لینک‌های سایدبار */}
         <nav className="flex flex-col gap-1">
@@ -30,6 +40,7 @@ const SellerLayout = () => {
             <NavLink
               key={index}
               to={item.path}
+              onClick={() => setIsSidebarOpen(false)}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-md transition-all ${isActive
                   ? "bg-primary/20 text-primary font-medium"
@@ -45,20 +56,39 @@ const SellerLayout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6 overflow-auto">
-        {/* بالای صفحه */}
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-lg font-semibold">Hi, Admin 👋</p>
+      {/* Overlay for mobile when sidebar open */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-10 bg-black/30 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <main className="flex-1 overflow-auto" onClick={() => { if (isSidebarOpen) setIsSidebarOpen(false); }}>
+        {/* Top bar (mobile) */}
+        <div className="flex items-center justify-between px-4 py-3 border-b md:hidden">
           <button
-            // onClick={logout}
-            className="px-4 py-1 text-sm border border-gray-400 rounded-full hover:bg-gray-100"
+            type="button"
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2"
+            aria-label="Open sidebar"
           >
-            Logout
+            ☰
           </button>
+          <p className="text-base font-semibold">Admin</p>
+          <span className="w-6" />
+        </div>
+
+        {/* Header (desktop) */}
+        <div className="items-center justify-between hidden px-6 py-4 md:flex">
+          <p className="text-lg font-semibold">Hi, Admin 👋</p>
+          <button className="px-4 py-1 text-sm border border-gray-400 rounded-full hover:bg-gray-100">Logout</button>
         </div>
 
         {/* محتوای داخلی */}
-        <Outlet context={{ productAdded, handleProductAdded }} /> {/* Pass state and handler via context */}
+        <div className="px-4 pb-6 md:px-6">
+          <Outlet context={{ productAdded, handleProductAdded }} /> {/* Pass state and handler via context */}
+        </div>
       </main>
     </div>
   );

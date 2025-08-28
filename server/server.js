@@ -13,7 +13,7 @@ import connectCloudunary from "./configs/cloudinary.js";
 import cartRouter from "./routes/cartRoute.js";
 import addressRouter from "./routes/addressRoute.js";
 import orderRouter from "./routes/orderRoute.js";
-
+import commentsRoutesr from "./routes/commentsRouter.js";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -48,7 +48,7 @@ app.use("/api/cart", cartRouter);
 app.use("/api/product", productRoutes);
 app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
-
+app.use("/api/comments", commentsRoutesr);
 
 
 

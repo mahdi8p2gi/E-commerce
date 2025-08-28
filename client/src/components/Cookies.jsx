@@ -1,17 +1,15 @@
-
-
 import { useState, useEffect, useCallback } from "react";
 
 const Cookies = () => {
   const [showBanner, setShowBanner] = useState(false);
 
-  // بررسی consent کاربر بعد از رندر اولیه
+  // Check user's consent on initial render
   useEffect(() => {
     const consent = localStorage.getItem("cookieConsent") ?? null;
     if (!consent) setShowBanner(true);
   }, []);
 
-  // تابع برای ذخیره تصمیم کاربر
+  // Save user's decision
   const handleConsent = useCallback((value) => {
     localStorage.setItem("cookieConsent", value);
     setShowBanner(false);
@@ -21,20 +19,27 @@ const Cookies = () => {
 
   return (
     <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex flex-col items-center w-11/12 max-w-sm sm:max-w-md bg-white text-gray-500 text-center p-6 rounded-lg border border-gray-300/30 shadow-lg transition-all duration-300">
+      {/* Cookie icon */}
       <img
         className="w-14 h-14 mb-2"
         src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/cookies/cookieImage1.svg"
         alt="Cookie icon"
       />
+
+      {/* Banner title */}
       <h2 className="text-gray-800 text-xl font-semibold mb-2">
         We care about your privacy
       </h2>
+
+      {/* Banner description */}
       <p className="w-11/12 mb-4 text-sm sm:text-base">
         This website uses cookies for functionality, analytics, and marketing. By accepting, you agree to our{" "}
         <a href="/cookie-policy" className="font-medium underline hover:text-primary">
           Cookie Policy
         </a>.
       </p>
+
+      {/* Action buttons */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
         <button
           type="button"

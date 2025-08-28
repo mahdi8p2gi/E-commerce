@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from '@react-oauth/google';  // وارد کردن کامپوننت GoogleLogin
+import { GoogleLogin } from "@react-oauth/google"; // Google login component
 import { useAppContext } from "../context/AppContext";
 
-function Login() {
+const Login = () => {
   const { setShowUserLogin, setUser } = useAppContext();
   const navigate = useNavigate();
 
@@ -15,6 +15,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Reset form fields
   const resetForm = () => {
     setName("");
     setEmail("");
@@ -22,19 +23,19 @@ function Login() {
     setError("");
   };
 
+  // Handle form submission
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
       setError("");
 
       if (!email || !password || (state === "register" && !name)) {
-        return setError("لطفاً همه فیلدها را پر کنید.");
+        return setError("Please fill all fields.");
       }
 
       setLoading(true);
 
-      const endpoint =
-        state === "login" ? "/api/users/login" : "/api/users/register";
+      const endpoint = state === "login" ? "/api/users/login" : "/api/users/register";
       const payload =
         state === "login"
           ? { email, password }
@@ -43,9 +44,7 @@ function Login() {
       try {
         const response = await fetch(`http://localhost:5000${endpoint}`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
           credentials: "include",
         });
@@ -60,7 +59,6 @@ function Login() {
         });
 
         navigate("/");
-
         resetForm();
         setShowUserLogin(false);
       } catch (err) {
@@ -72,16 +70,14 @@ function Login() {
     [state, name, email, password, setUser, setShowUserLogin, navigate]
   );
 
-  // ورود با گوگل
+  // Handle Google login
   const handleGoogleLogin = async (response) => {
     const credential = response.credential;
-    // ارسال اطلاعات اعتبارسنجی گوگل به سرور برای ورود
+
     try {
       const res = await fetch("http://localhost:5000/api/users/google-login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: credential }),
         credentials: "include",
       });
@@ -99,10 +95,10 @@ function Login() {
         navigate("/");
         setShowUserLogin(false);
       } else {
-        setError("ورود با گوگل ناموفق بود.");
+        setError("Google login failed.");
       }
     } catch (error) {
-      setError("خطا در ورود با گوگل.");
+      setError("Error during Google login.");
     }
   };
 
@@ -114,6 +110,7 @@ function Login() {
         onSubmit={handleSubmit}
         className="relative flex flex-col gap-4 p-8 py-12 w-80 sm:w-[352px] rounded-lg shadow-xl border border-gray-200 bg-white text-sm text-gray-600"
       >
+        {/* Close button */}
         <button
           type="button"
           onClick={() => setShow(false)}
@@ -122,17 +119,18 @@ function Login() {
           &times;
         </button>
 
+        {/* Form title */}
         <p className="m-auto text-2xl font-medium">
           <span className="text-primary">User</span>{" "}
           {state === "login" ? "Login" : "Sign Up"}
         </p>
 
+        {/* Error message */}
         {error && (
-          <p className="text-sm text-center text-red-500 whitespace-pre-wrap">
-            {error}
-          </p>
+          <p className="text-sm text-center text-red-500 whitespace-pre-wrap">{error}</p>
         )}
 
+        {/* Name input for register */}
         {state === "register" && (
           <div className="w-full">
             <p>Name</p>
@@ -147,6 +145,7 @@ function Login() {
           </div>
         )}
 
+        {/* Email input */}
         <div className="w-full">
           <p>Email</p>
           <input
@@ -159,6 +158,7 @@ function Login() {
           />
         </div>
 
+        {/* Password input */}
         <div className="w-full">
           <p>Password</p>
           <input
@@ -171,10 +171,9 @@ function Login() {
           />
         </div>
 
+        {/* Toggle login/register */}
         <p className="text-sm">
-          {state === "register"
-            ? "Already have an account?"
-            : "Create an account?"}{" "}
+          {state === "register" ? "Already have an account?" : "Create an account?"}{" "}
           <span
             onClick={() => {
               setState(state === "login" ? "register" : "login");
@@ -187,28 +186,28 @@ function Login() {
           </span>
         </p>
 
+        {/* Submit button */}
         <button
           type="submit"
           disabled={loading}
           className="w-full py-2 text-white transition-all rounded-md cursor-pointer bg-primary hover:bg-primary-dull disabled:opacity-60"
         >
           {loading
-            ? "لطفاً صبر کنید..."
+            ? "Please wait..."
             : state === "register"
             ? "Create Account"
             : "Login"}
         </button>
 
-        {/* دکمه ورود با گوگل */}
+        {/* Google login button */}
         <GoogleLogin
           onSuccess={handleGoogleLogin}
-          onError={() => setError("خطا در ورود با گوگل")}
+          onError={() => setError("Error during Google login")}
           useOneTap
         />
-
       </form>
     </div>
   );
-}
+};
 
 export default Login;

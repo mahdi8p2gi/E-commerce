@@ -25,6 +25,7 @@ import SellerLayout from "./pages/Admin/SellerLayout";
 import AddProduct from "./pages/Admin/AddProduct";
 import ProductList from "./pages/Admin/ProductList";
 import Order from "./pages/Admin/Order";
+import UsersList from "./pages/Admin/UsersList";
 import WishList from "./pages/WishList";
 import CookiePolicy from "./pages/CookiePolicy";
 import ContactUs from "./pages/ContactUs";
@@ -75,6 +76,7 @@ if (loading) return <Loader />;
             <Route path="add-product" element={<AddProduct />} />
             <Route path="products-list" element={<ProductList />} />
             <Route path="orders" element={<Order />} />
+            <Route path="users" element={<UsersList />} />
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="*" element={<NotFound />} />

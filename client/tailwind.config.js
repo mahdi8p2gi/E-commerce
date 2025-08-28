@@ -10,22 +10,15 @@ module.exports = {
         primary: "#4fbf8b",
         "primary-dull": "#44ae7c",
       },
-    },
-  },
-  plugins: [],
-};
-
-
-module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  darkMode: "class",
-  theme: {
-    extend: {
-      colors: {
-        primary: "#4fbf8b",
-        "primary-dull": "#44ae7c",
+      screens: {
+        xs: "480px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+        "3xl": "1920px",
       },
-
       keyframes: {
         "fade-in": {
           "0%": { opacity: 0, transform: "translateY(4px)" },
@@ -37,4 +30,5 @@ module.exports = {
       },
     },
   },
+  plugins: [],
 };

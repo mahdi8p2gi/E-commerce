@@ -32,37 +32,7 @@ import maggi_image from "./maggi_image.png";
 import dairy_product_image from "./dairy_product_image.png";
 import bakery_image from "./bakery_image.png";
 import grain_image from "./grain_image.png";
-import apple_image from "./apple_image.png";
-import amul_milk_image from "./amul_milk_image.png";
-import coca_cola_image from "./coca_cola_image.png";
-import brown_bread_image from "./brown_bread_image.png";
-import basmati_rice_image from "./basmati_rice_image.png";
-import paneer_image from "./paneer_image.png";
-import orange_image from "./orange_image.png";
-import pepsi_image from "./pepsi_image.png";
-import wheat_flour_image from "./wheat_flour_image.png";
-import cheese_image from "./cheese_image.png";
-import eggs_image from "./eggs_image.png";
-import spinach_image_1 from "./spinach_image_1.png";
-import onion_image_1 from "./onion_image_1.png";
-import banana_image_1 from "./banana_image_1.png";
-import mango_image_1 from "./mango_image_1.png";
-import grapes_image_1 from "./grapes_image_1.png";
-import paneer_image_2 from "./paneer_image_2.png";
-import sprite_image_1 from "./sprite_image_1.png";
-import fanta_image_1 from "./fanta_image_1.png";
-import seven_up_image_1 from "./seven_up_image_1.png";
-import top_ramen_image from "./top_ramen_image.png";
-import knorr_soup_image from "./knorr_soup_image.png";
-import yippee_image from "./yippee_image.png";
-import maggi_oats_image from "./maggi_oats_image.png";
-import butter_croissant_image from "./butter_croissant_image.png";
-import chocolate_cake_image from "./chocolate_cake_image.png";
-import whole_wheat_bread_image from "./whole_wheat_bread_image.png";
-import vanilla_muffins_image from "./vanilla_muffins_image.png";
-import quinoa_image from "./quinoa_image.png";
-import brown_rice_image from "./brown_rice_image.png";
-import barley_image from "./barley_image.png";
+import user_ad from "./user_ad.svg";
 
 export const assets = {
   logo,
@@ -92,6 +62,7 @@ export const assets = {
   bottom_banner_image_sm,
   add_address_iamge,
   box_icon,
+  user_ad,
 };
 
 export const categories = [
@@ -194,15 +165,13 @@ export const features = [
 ];
 
 export const dummyProducts = [
-
-
   {
     _id: "gd49g56h",
     name: "Spinach 500g",
     category: "Vegetables",
     price: 18,
     offerPrice: 15,
-    image: [spinach_image_1],
+    image: ["/images/spinach_image_1"],
     description: [
       "Rich in iron",
       "High in vitamins",
@@ -218,7 +187,7 @@ export const dummyProducts = [
     category: "Vegetables",
     price: 22,
     offerPrice: 19,
-    image: [onion_image_1],
+    image: ["/images/onion_image_1"],
     description: [
       "Fresh and pungent",
       "Perfect for cooking",
@@ -230,31 +199,14 @@ export const dummyProducts = [
   },
 
   // Fruits
-  {
-    _id: "ek51j12k",
-    name: "Apple 1 kg",
-    category: "Fruits",
-    price: 120,
-    offerPrice: 110,
-    image: [apple_image],
-    description: [
-      "Crisp and juicy",
-      "Rich in fiber",
-      "Boosts immunity",
-      "Perfect for snacking and desserts",
-      "Organic and farm fresh",
-    ],
-    createdAt: "2025-03-25T07:17:46.018Z",
-    updatedAt: "2025-03-25T07:18:13.103Z",
-    inStock: true,
-  },
+
   {
     _id: "ek52j23k",
     name: "Orange 1 kg",
     category: "Fruits",
     price: 80,
     offerPrice: 75,
-    image: [orange_image],
+    image: ["/images/orange_image"],
     description: [
       "Juicy and sweet",
       "Rich in Vitamin C",
@@ -264,46 +216,14 @@ export const dummyProducts = [
     updatedAt: "2025-03-25T07:18:13.103Z",
     inStock: true,
   },
-  {
-    _id: "ek53j34k",
-    name: "Banana 1 kg",
-    category: "Fruits",
-    price: 50,
-    offerPrice: 45,
-    image: [banana_image_1],
-    description: [
-      "Sweet and ripe",
-      "High in potassium",
-      "Great for smoothies and snacking",
-    ],
-    createdAt: "2025-03-25T07:17:46.018Z",
-    updatedAt: "2025-03-25T07:18:13.103Z",
-    inStock: true,
-  },
-  {
-    _id: "ek54j45k",
-    name: "Mango 1 kg",
-    category: "Fruits",
 
-    price: 150,
-    offerPrice: 140,
-    image: [mango_image_1],
-    description: [
-      "Sweet and flavorful",
-      "Perfect for smoothies and desserts",
-      "Rich in Vitamin A",
-    ],
-    createdAt: "2025-03-25T07:17:46.018Z",
-    updatedAt: "2025-03-25T07:18:13.103Z",
-    inStock: true,
-  },
   {
     _id: "ek55j56k",
     name: "Grapes 500g",
     category: "Fruits",
     price: 70,
     offerPrice: 65,
-    image: [grapes_image_1],
+    image: ["/images/grapes_image_1"],
     description: [
       "Fresh and juicy",
       "Rich in antioxidants",
@@ -321,7 +241,7 @@ export const dummyProducts = [
     category: "Dairy",
     price: 60,
     offerPrice: 55,
-    image: [amul_milk_image],
+    image: ["/images/amul_milk_image"],
     description: [
       "Pure and fresh",
       "Rich in calcium",
@@ -338,7 +258,7 @@ export const dummyProducts = [
     category: "Dairy",
     price: 90,
     offerPrice: 85,
-    image: [paneer_image],
+    image: ["/images/paneer_image"],
     description: [
       "Soft and fresh",
       "Rich in protein",
@@ -354,7 +274,7 @@ export const dummyProducts = [
     category: "Dairy",
     price: 90,
     offerPrice: 85,
-    image: [eggs_image],
+    image: ["/images/eggs_image"],
     description: [
       "Farm fresh",
       "Rich in protein",
@@ -370,7 +290,7 @@ export const dummyProducts = [
     category: "Dairy",
     price: 90,
     offerPrice: 85,
-    image: [paneer_image_2],
+    image: ["/images/paneer_image_2"],
     description: [
       "Soft and fresh",
       "Rich in protein",
@@ -386,7 +306,7 @@ export const dummyProducts = [
     category: "Dairy",
     price: 140,
     offerPrice: 130,
-    image: [cheese_image],
+    image: ["/images/cheese_image"],
     description: [
       "Creamy and delicious",
       "Perfect for pizzas and sandwiches",
@@ -404,7 +324,7 @@ export const dummyProducts = [
     category: "Drinks",
     price: 80,
     offerPrice: 75,
-    image: [coca_cola_image],
+    image: ["/images/coca_cola_image"],
     description: [
       "Refreshing and fizzy",
       "Perfect for parties and gatherings",
@@ -420,7 +340,7 @@ export const dummyProducts = [
     category: "Drinks",
     price: 78,
     offerPrice: 73,
-    image: [pepsi_image],
+    image: ["/images/pepsi_image"],
     description: [
       "Chilled and refreshing",
       "Perfect for celebrations",
@@ -436,7 +356,7 @@ export const dummyProducts = [
     category: "Drinks",
     price: 79,
     offerPrice: 74,
-    image: [sprite_image_1],
+    image: ["/images/sprite_image_1"],
     description: [
       "Refreshing citrus taste",
       "Perfect for hot days",
@@ -452,7 +372,7 @@ export const dummyProducts = [
     category: "Drinks",
     price: 77,
     offerPrice: 72,
-    image: [fanta_image_1],
+    image: ["/images/fanta_image_1"],
     description: [
       "Sweet and fizzy",
       "Great for parties and gatherings",
@@ -468,7 +388,7 @@ export const dummyProducts = [
     category: "Drinks",
     price: 76,
     offerPrice: 71,
-    image: [seven_up_image_1],
+    image: ["/images/seven_up_image_1"],
     description: [
       "Refreshing lemon-lime flavor",
       "Perfect for refreshing",
@@ -486,7 +406,7 @@ export const dummyProducts = [
     category: "Grains",
     price: 550,
     offerPrice: 520,
-    image: [basmati_rice_image],
+    image: ["/images/basmati_rice_image"],
     description: [
       "Long grain and aromatic",
       "Perfect for biryani and pulao",
@@ -502,7 +422,7 @@ export const dummyProducts = [
     category: "Grains",
     price: 250,
     offerPrice: 230,
-    image: [wheat_flour_image],
+    image: ["/images/wheat_flour_image"],
     description: [
       "High-quality whole wheat",
       "Soft and fluffy rotis",
@@ -518,7 +438,7 @@ export const dummyProducts = [
     category: "Grains",
     price: 450,
     offerPrice: 420,
-    image: [quinoa_image],
+    image: ["/images/quinoa_image"],
     description: [
       "High in protein and fiber",
       "Gluten-free",
@@ -534,7 +454,7 @@ export const dummyProducts = [
     category: "Grains",
     price: 120,
     offerPrice: 110,
-    image: [brown_rice_image],
+    image: ["/images/brown_rice_image"],
     description: [
       "Whole grain and nutritious",
       "Helps in weight management",
@@ -550,7 +470,7 @@ export const dummyProducts = [
     category: "Grains",
     price: 150,
     offerPrice: 140,
-    image: [barley_image],
+    image: ["/images/barley_image"],
     description: [
       "Rich in fiber",
       "Helps improve digestion",
@@ -568,7 +488,7 @@ export const dummyProducts = [
     category: "Bakery",
     price: 40,
     offerPrice: 35,
-    image: [brown_bread_image],
+    image: ["/images/brown_bread_image"],
     description: [
       "Soft and healthy",
       "Made from whole wheat",
@@ -584,7 +504,7 @@ export const dummyProducts = [
     category: "Bakery",
     price: 50,
     offerPrice: 45,
-    image: [butter_croissant_image],
+    image: ["/images/butter_croissant_image"],
     description: [
       "Flaky and buttery",
       "Freshly baked",
@@ -600,7 +520,7 @@ export const dummyProducts = [
     category: "Bakery",
     price: 350,
     offerPrice: 325,
-    image: [chocolate_cake_image],
+    image: ["/images/chocolate_cake_image"],
     description: [
       "Rich and moist",
       "Made with premium cocoa",
@@ -616,7 +536,7 @@ export const dummyProducts = [
     category: "Bakery",
     price: 45,
     offerPrice: 40,
-    image: [whole_wheat_bread_image],
+    image: ["/images/whole_wheat_bread_image"],
     description: [
       "Healthy and nutritious",
       "Made with whole wheat flour",
@@ -632,7 +552,7 @@ export const dummyProducts = [
     category: "Bakery",
     price: 100,
     offerPrice: 90,
-    image: [vanilla_muffins_image],
+    image: ["/images/vanilla_muffins_image"],
     description: [
       "Soft and fluffy",
       "Perfect for a quick snack",
@@ -651,7 +571,7 @@ export const dummyProducts = [
 
     price: 55,
     offerPrice: 50,
-    image: [maggi_image],
+    image: ["/images/maggi_image"],
     description: [
       "Instant and easy to cook",
       "Delicious taste",
@@ -667,59 +587,11 @@ export const dummyProducts = [
     category: "Instant",
     price: 45,
     offerPrice: 40,
-    image: [top_ramen_image],
+    image: ["/images/top_ramen_image"],
     description: [
       "Quick and easy to prepare",
       "Spicy and flavorful",
       "Loved by college students and families",
-    ],
-    createdAt: "2025-03-25T07:17:46.018Z",
-    updatedAt: "2025-03-25T07:18:13.103Z",
-    inStock: true,
-  },
-  {
-    _id: "in03h27s",
-    name: "Knorr Cup Soup 70g",
-    category: "Instant",
-    price: 35,
-    offerPrice: 30,
-    image: [knorr_soup_image],
-    description: [
-      "Convenient for on-the-go",
-      "Healthy and nutritious",
-      "Variety of flavors",
-    ],
-    createdAt: "2025-03-25T07:17:46.018Z",
-    updatedAt: "2025-03-25T07:18:13.103Z",
-    inStock: true,
-  },
-  {
-    _id: "in04i28r",
-    name: "Yippee Noodles 260g",
-    category: "Instant",
-    price: 50,
-    offerPrice: 45,
-    image: [yippee_image],
-    description: [
-      "Non-fried noodles for healthier choice",
-      "Tasty and filling",
-      "Convenient for busy schedules",
-    ],
-    createdAt: "2025-03-25T07:17:46.018Z",
-    updatedAt: "2025-03-25T07:18:13.103Z",
-    inStock: true,
-  },
-  {
-    _id: "in05j29q",
-    name: "Oats Noodles 72g",
-    category: "Instant",
-    price: 40,
-    offerPrice: 35,
-    image: [maggi_oats_image],
-    description: [
-      "Healthy alternative with oats",
-      "Good for digestion",
-      "Perfect for breakfast or snacks",
     ],
     createdAt: "2025-03-25T07:17:46.018Z",
     updatedAt: "2025-03-25T07:18:13.103Z",
@@ -784,5 +656,110 @@ export const dummyOrders = [
     isPaid: false,
     createdAt: "2025-03-25T07:17:13.068Z",
     updatedAt: "2025-03-25T07:17:13.068Z",
+  },
+];
+
+export const sidebarLinks = [
+  {
+    name: "Add Product",
+    path: "/seller-layout/add-product",
+    icon: assets.add_icon,
+  },
+  {
+    name: "Product List",
+    path: "/seller-layout/products-list",
+    icon: assets.product_list_icon,
+  },
+  { name: "Orders", path: "/seller-layout/orders", icon: assets.order_icon },
+  { name: "Users", path: "/seller-layout/users", icon: assets.user_ad },
+];
+
+export const faqsData = [
+  {
+    question: "How can I track my order?",
+    answer:
+      "After placing an order, a tracking link will be sent to your email. You can also check the order status in 'My Orders' in your account.",
+  },
+  {
+    question: "Can I return a product?",
+    answer:
+      "Yes, if you are not satisfied, you can return the product within 7 days of receipt. Please contact our support team for assistance.",
+  },
+  {
+    question: "Are there special discounts for new customers?",
+    answer:
+      "Yes, new customers can use the discount code 'WELCOME10' to get 10% off on their first purchase.",
+  },
+  {
+    question: "Is Cash on Delivery available?",
+    answer:
+      "Yes, in some regions, cash on delivery is available. Please select 'Cash on Delivery' when placing your order.",
+  },
+  {
+    question: "Do you offer organic products?",
+    answer:
+      "Yes, we provide a variety of organic and healthy products. You can browse them in the 'Organic Products' section on our website.",
+  },
+];
+
+export const cardsTop = [
+  {
+    image: "https://i.pravatar.cc/200?img=11",
+    name: "Sara Johnson",
+    handle: "@sara_design",
+    date: "April 12, 2025",
+    text: "This platform has completely changed the way I shop online. Super fast and reliable!",
+  },
+  {
+    image: "https://i.pravatar.cc/200?img=12",
+    name: "Michael Lee",
+    handle: "@mlee_dev",
+    date: "May 03, 2025",
+    text: "I found exactly what I needed, and the checkout process was seamless.",
+  },
+  {
+    image: "https://i.pravatar.cc/200?img=13",
+    name: "Emily Carter",
+    handle: "@emilywrites",
+    date: "June 08, 2025",
+    text: "Customer support is outstanding. They answered my questions instantly.",
+  },
+  {
+    image: "https://i.pravatar.cc/200?img=14",
+    name: "David Brown",
+    handle: "@dbrown",
+    date: "July 15, 2025",
+    text: "Very easy to navigate. The product categories make finding items super simple.",
+  },
+];
+
+ export const cardsBottom = [
+  {
+    image: "https://i.pravatar.cc/200?img=21",
+    name: "Olivia Green",
+    handle: "@oliviag",
+    date: "April 25, 2025",
+    text: "Great experience overall! My order arrived earlier than expected.",
+  },
+  {
+    image: "https://i.pravatar.cc/200?img=22",
+    name: "James Miller",
+    handle: "@jamesm",
+    date: "May 18, 2025",
+    text: "The mobile version works like a charm. Super responsive!",
+  },
+  {
+    image: "https://i.pravatar.cc/200?img=23",
+    name: "Sophia Turner",
+    handle: "@sophiat",
+    date: "June 20, 2025",
+    text: "I love how intuitive the UI is. Adding to cart and checkout takes seconds.",
+  },
+  {
+    image: "https://i.pravatar.cc/200?img=24",
+    name: "Daniel Adams",
+    handle: "@daniela",
+    date: "July 28, 2025",
+    text: "High quality products at unbeatable prices. Highly recommend!",
   },
 ];

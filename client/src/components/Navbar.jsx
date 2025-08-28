@@ -7,9 +7,9 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import Banner from "./Banner";
 import { RiMenu3Line } from "react-icons/ri";
 
-function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
+const Navbar = () => {
+  const [open, setOpen] = useState(false); // Mobile menu state
+  const [profileOpen, setProfileOpen] = useState(false); // User profile dropdown state
 
   const {
     user,
@@ -21,6 +21,7 @@ function Navbar() {
     getCartCount,
   } = useAppContext();
 
+  // Logout user
   const logout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
@@ -32,30 +33,27 @@ function Navbar() {
     }
   };
 
+  // Navigate to products page on search
   useEffect(() => {
     if (searchQuery.length > 0) {
       navigate("/products");
     }
   }, [searchQuery, navigate]);
 
-
-
-  const handleWishList = async () => {
-    navigate('/wishlist')
-  }
-
+  const handleWishList = () => {
+    navigate("/wishlist");
+  };
 
   return (
-    <div className="">
+    <div>
       <Banner />
-      <nav className="relative px-6 flex items-center  justify-between px4 py-4 transition-all bg-white border-b border-gray-300 md:px-16 lg:px-24 xl:px-32">
-
-        {/* لوگو */}
+      <nav className="relative px-6 flex items-center justify-between py-4 transition-all bg-white border-b border-gray-300 md:px-16 lg:px-24 xl:px-32">
+        {/* Logo */}
         <NavLink to="/" onClick={() => setOpen(false)}>
           <img src={assets.logo} alt="logo" className="h-8 md:h-10" />
         </NavLink>
 
-        {/* دکمه داشبورد ادمین */}
+        {/* Admin Dashboard link */}
         {user?.role === "admin" && (
           <NavLink
             to="/seller-layout"
@@ -65,34 +63,41 @@ function Navbar() {
           </NavLink>
         )}
 
-
-
-        {/* منوی دسکتاپ */}
+        {/* Desktop Menu */}
         <div className="items-center hidden gap-8 text-gray-900 sm:flex">
           <NavLink to="/" className="transition duration-300 hover:text-primary">
             Home
           </NavLink>
-          <NavLink to="/products" className="transition duration-300 hover:text-primary">
+          <NavLink
+            to="/products"
+            className="transition duration-300 hover:text-primary"
+          >
             Products
           </NavLink>
-          <NavLink to="/contact-us" className="transition duration-300 hover:text-primary">
+          <NavLink
+            to="/contact-us"
+            className="transition duration-300 hover:text-primary"
+          >
             Contact
           </NavLink>
 
-          {/* جستجو */}
-          <div className="items-center hidden gap-2 px-3 text-sm bg-white border border-gray-300 rounded-full lg:flex">
+          {/* Desktop Search */}
+          <div className="relative hidden lg:flex items-center max-w-sm px-3 py-1.5 bg-white border border-gray-300 rounded-full shadow-sm focus-within:ring-2 focus-within:ring-primary transition-all">
             <input
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
               type="text"
               placeholder="Search products"
               value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-transparent outline-none placeholder-gray-400 placeholder:text-sm text-gray-700 pr-8"
             />
-            <img src={assets.search_icon} alt="search" className="w-4 h-4" />
+            <img
+              src={assets.search_icon}
+              alt="search"
+              className="absolute right-3 w-4 h-4 pointer-events-none"
+            />
           </div>
 
-          {/* آیکون سبد خرید */}
-
+          {/* Cart Icon */}
           <Tooltip.Provider delayDuration={100}>
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
@@ -124,7 +129,7 @@ function Navbar() {
             </Tooltip.Root>
           </Tooltip.Provider>
 
-          {/* علاقه مندی ها */}
+          {/* Wishlist Icon */}
           <Tooltip.Provider delayDuration={100}>
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
@@ -137,7 +142,6 @@ function Navbar() {
                   className="z-50 px-3 py-1 text-xs text-white rounded shadow-md bg-primary animate-fade-in"
                   side="bottom"
                   sideOffset={5}
-
                 >
                   wishlist
                 </Tooltip.Content>
@@ -145,7 +149,7 @@ function Navbar() {
             </Tooltip.Root>
           </Tooltip.Provider>
 
-          {/* بخش کاربر */}
+          {/* User Section */}
           {!user ? (
             <button
               onClick={() => setShowUserLogin(true)}
@@ -161,14 +165,14 @@ function Navbar() {
                 title="Profile menu"
               >
                 <img
-                  src={user?.profileImage || assets.profile_icon} // اگر نال بود عکس پیش‌فرض باشه
+                  src={user?.profileImage || assets.profile_icon}
                   alt="Profile"
                   className="object-cover w-10 h-10 rounded-full"
                   onError={(e) => {
-                    e.currentTarget.src = assets.profile_icon; // اگر تصویر خراب بود عکس پیش‌فرض بذار
+                    e.currentTarget.src = assets.profile_icon;
                   }}
                 />
-                {user?.username && <span>{user.username}</span>} {/* Display username if available */}
+                {user?.username && <span>{user.username}</span>}
               </div>
 
               {profileOpen && (
@@ -181,12 +185,14 @@ function Navbar() {
                       My Profile
                     </li>
                   </NavLink>
-                  <NavLink to="/my-orders" onClick={() => setProfileOpen(false)}>
+                  <NavLink
+                    to="/my-orders"
+                    onClick={() => setProfileOpen(false)}
+                  >
                     <li className="px-4 py-2 cursor-pointer hover:bg-gray-100">
                       My Orders
                     </li>
                   </NavLink>
-
                   <li
                     className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                     onClick={logout}
@@ -199,10 +205,9 @@ function Navbar() {
           )}
         </div>
 
-        {/* دکمه موبایل منو */}
-
+        {/* Mobile Menu Button */}
         <div className="sm:hidden flex items-center gap-2">
-
+          {/* Mobile Cart */}
           <div
             onClick={() => navigate("/cart")}
             className="relative cursor-pointer sm:hidden"
@@ -219,6 +224,7 @@ function Navbar() {
             )}
           </div>
 
+          {/* Hamburger Button */}
           <button
             onClick={() => setOpen(!open)}
             aria-label="Menu"
@@ -228,10 +234,25 @@ function Navbar() {
           </button>
         </div>
 
-
-        {/* منوی موبایل */}
+        {/* Mobile Menu */}
         {open && (
           <div className="absolute left-0 z-50 flex flex-col items-start w-full gap-4 px-6 py-4 text-sm bg-white shadow-md top-full sm:hidden">
+            {/* Mobile Search */}
+            <div className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search products"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 border rounded-full focus:outline-primary"
+              />
+              <img
+                src={assets.search_icon}
+                alt="search"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none"
+              />
+            </div>
+
             <NavLink
               to="/"
               onClick={() => setOpen(false)}
@@ -239,7 +260,6 @@ function Navbar() {
             >
               Home
             </NavLink>
-
             <NavLink
               to="/products"
               onClick={() => setOpen(false)}
@@ -256,7 +276,6 @@ function Navbar() {
                 >
                   My Orders
                 </NavLink>
-
                 <NavLink
                   to="/profile"
                   onClick={() => setOpen(false)}
@@ -266,8 +285,6 @@ function Navbar() {
                 </NavLink>
               </>
             )}
-
-
             <NavLink
               to="/contact-us"
               onClick={() => setOpen(false)}
@@ -300,12 +317,10 @@ function Navbar() {
               )}
             </div>
           </div>
-        )
-        }
-      </nav >
-    </div >
-
+        )}
+      </nav>
+    </div>
   );
-}
+};
 
 export default Navbar;

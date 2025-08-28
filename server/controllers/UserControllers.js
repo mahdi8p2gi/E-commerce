@@ -197,3 +197,32 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({ message: "خطای سرور" });
   }
 };
+
+export const listUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, {
+      username: 1,
+      email: 1,
+      role: 1,
+      avatar: 1,
+      isBanned: 1,
+      createdAt: 1,
+    }).sort({ createdAt: -1 });
+    res.json({ success: true, users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "خطا در دریافت لیست کاربران" });
+  }
+};
+
+export const toggleBanUser = async (req, res) => {
+  try {
+    const { userId, isBanned } = req.body;
+    if (!userId) return res.status(400).json({ success: false, message: "شناسه کاربر الزامی است" });
+    await User.findByIdAndUpdate(userId, { isBanned: !!isBanned });
+    res.json({ success: true, message: isBanned ? "کاربر مسدود شد" : "کاربر آزاد شد" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "خطا در تغییر وضعیت کاربر" });
+  }
+};

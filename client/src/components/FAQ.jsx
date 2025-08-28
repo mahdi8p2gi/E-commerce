@@ -1,41 +1,17 @@
 import { useState } from "react";
+import { faqsData } from "../assets/assets.js";
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
-  const faqsData = [
-    {
-      question: "Lightning-Fast Performance",
-      answer: "Built with speed — minimal load times and optimized rendering.",
-    },
-    {
-      question: "Fully Customizable Components",
-      answer:
-        "Easily adjust styles, structure, and behavior to match your project needs.",
-    },
-    {
-      question: "Responsive by Default",
-      answer:
-        "Every component is responsive by default — no extra CSS required.",
-    },
-    {
-      question: "Tailwind CSS Powered",
-      answer:
-        "Built using Tailwind utility classes — no extra CSS or frameworks required.",
-    },
-    {
-      question: "Dark Mode Support",
-      answer:
-        "All components come ready with light and dark theme support out of the box.",
-    },
-  ];
-
+  // Toggle the FAQ item open/close
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <div className="flex flex-col items-center text-center text-slate-800 px-4  py-14">
+    <div className="flex flex-col items-center text-center text-slate-800 px-4 py-14">
+      {/* Section title */}
       <p className="text-base font-medium text-primary">FAQ</p>
       <h1 className="text-3xl md:text-4xl font-semibold mt-2">
         Frequently Asked Questions
@@ -45,11 +21,11 @@ const FAQ = () => {
         support tickets.
       </p>
 
-      {/* Accordion */}
+      {/* Accordion container */}
       <div className="max-w-3xl w-full mt-8 flex flex-col gap-5">
         {faqsData.map((faq, index) => (
           <div key={index} className="w-full">
-            {/* سوال */}
+            {/* Question header */}
             <div
               className="flex items-center justify-between w-full cursor-pointer 
               bg-primary/10 border border-primary/30 hover:border-primary-dull 
@@ -79,7 +55,7 @@ const FAQ = () => {
               </svg>
             </div>
 
-            {/* جواب */}
+            {/* Answer content */}
             <div
               className={`px-6 overflow-hidden transition-all duration-500 ease-in-out 
               ${openIndex === index ? "max-h-40 opacity-100 py-4" : "max-h-0 opacity-0"}`}
