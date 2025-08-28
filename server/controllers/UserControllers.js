@@ -1,114 +1,96 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
 import mongoose from "mongoose";
+import User from "../models/User.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
-// ثبت‌نام
+/**
+ * User Registration
+ */
 export const register = async (req, res) => {
   try {
     let { username, email, password } = req.body;
 
+    // Validate required fields
     if (!username || !email || !password) {
-      return res
-        .status(400)
-        .json({ success: false, message: "تمام فیلدها را پر کنید" });
+      return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
     username = username.toLowerCase().trim();
     email = email.toLowerCase().trim();
 
+    // Check for existing user
     const existingUser = await User.findOne({
       $or: [
         { email },
         { username: { $regex: `^${username}$`, $options: "i" } },
       ],
     });
-
     if (existingUser) {
-      return res
-        .status(409)
-        .json({ success: false, message: "ایمیل یا نام کاربری قبلاً ثبت شده" });
+      return res.status(409).json({ success: false, message: "Email or username already exists" });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create new user
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
-      role: "user", // نقش پیش‌فرض
+      role: "user", // default role
     });
-
     await newUser.save();
 
-    // ✅ ایجاد توکن با اطلاعات کاربر
+    // Create JWT token
     const token = jwt.sign(
       { id: newUser._id, email: newUser.email, role: newUser.role },
       JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    // ✅ ست کردن توکن در کوکی (اختیاری - برای استفاده با مرورگر)
+    // Set cookie (optional)
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // در توسعه false
-      sameSite: "lax", // یا "strict"
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    // ✅ پاسخ به فرانت‌اند
     return res.status(201).json({
       success: true,
-      message: "ثبت‌نام با موفقیت انجام شد",
-      user: {
-        id: newUser._id,
-        username: newUser.username,
-        email: newUser.email,
-        role: newUser.role,
-      },
-      token, // فرستادن توکن برای ذخیره در localStorage
+      message: "User registered successfully",
+      user: { id: newUser._id, username: newUser.username, email: newUser.email, role: newUser.role },
+      token,
     });
   } catch (error) {
-    console.error("❌ خطا در ثبت‌نام:", error);
+    console.error("Register error:", error);
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
-      return res
-        .status(409)
-        .json({ success: false, message: `${field} تکراری است` });
+      return res.status(409).json({ success: false, message: `${field} already exists` });
     }
-    return res.status(500).json({ success: false, message: "خطای سرور" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// لاگین
+/**
+ * User Login
+ */
 export const login = async (req, res) => {
   try {
     let { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ message: "ایمیل و رمز عبور الزامی است" });
-    }
+    if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
 
     email = email.toLowerCase().trim();
 
     const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: "کاربر یافت نشد" });
-    }
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "رمز عبور اشتباه است" });
-    }
+    if (!isMatch) return res.status(401).json({ message: "Incorrect password" });
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role }, // 👈 role اضافه شده باشه
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -118,111 +100,102 @@ export const login = async (req, res) => {
     });
 
     return res.status(200).json({
-      message: "ورود موفق",
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        role: user.role, // 👈 این خط رو اضافه کن
-      },
+      message: "Login successful",
+      user: { id: user._id, username: user.username, email: user.email, role: user.role },
       token,
     });
   } catch (error) {
-    console.error("❌ خطا در ورود:", error);
-    return res.status(500).json({ message: "خطای سرور در ورود" });
+    console.error("Login error:", error);
+    return res.status(500).json({ message: "Server error during login" });
   }
 };
 
+/**
+ * Check Authenticated User
+ */
 export const isAuth = async (req, res) => {
   try {
     const { userId } = req.body;
     const user = await User.findById(userId).select("-password");
     return res.json({ success: true, user });
   } catch (error) {
-    console.log(error.message);
+    console.error(error);
     res.json({ success: false, message: error.message });
   }
 };
 
+/**
+ * Logout user (clears sellerToken cookie)
+ */
 export const logout = async (req, res) => {
   try {
-    // پاک کردن کوکی sellerToken
     res.clearCookie("sellerToken", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // فقط روی https در پروداکشن
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-
     return res.json({ success: true, message: "Logged out successfully" });
   } catch (error) {
-    console.log(error.message);
+    console.error(error);
     res.json({ success: false, message: error.message });
   }
 };
 
-
-
-
-
+/**
+ * Update User Profile
+ */
 export const updateProfile = async (req, res) => {
   try {
     const { userId, username, email } = req.body;
 
-    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "شناسه کاربر معتبر نیست" });
-    }
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId))
+      return res.status(400).json({ message: "Invalid user ID" });
 
-    if (!username && !email) {
-      return res
-        .status(400)
-        .json({ message: "نام کاربری یا ایمیل باید ارسال شود" });
-    }
+    if (!username && !email)
+      return res.status(400).json({ message: "Username or email must be provided" });
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      {
-        ...(username && { username }),
-        ...(email && { email }),
-      },
+      { ...(username && { username }), ...(email && { email }) },
       { new: true }
     );
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "کاربر یافت نشد" });
-    }
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
 
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "خطای سرور" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
+/**
+ * List all users (Admin)
+ */
 export const listUsers = async (req, res) => {
   try {
     const users = await User.find({}, {
-      username: 1,
-      email: 1,
-      role: 1,
-      avatar: 1,
-      isBanned: 1,
-      createdAt: 1,
+      username: 1, email: 1, role: 1, avatar: 1, isBanned: 1, createdAt: 1
     }).sort({ createdAt: -1 });
     res.json({ success: true, users });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "خطا در دریافت لیست کاربران" });
+    res.status(500).json({ success: false, message: "Failed to fetch users" });
   }
 };
 
+/**
+ * Ban or unban user
+ */
 export const toggleBanUser = async (req, res) => {
   try {
     const { userId, isBanned } = req.body;
-    if (!userId) return res.status(400).json({ success: false, message: "شناسه کاربر الزامی است" });
+    if (!userId) return res.status(400).json({ success: false, message: "User ID is required" });
+
     await User.findByIdAndUpdate(userId, { isBanned: !!isBanned });
-    res.json({ success: true, message: isBanned ? "کاربر مسدود شد" : "کاربر آزاد شد" });
+    res.json({ success: true, message: isBanned ? "User banned" : "User unbanned" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "خطا در تغییر وضعیت کاربر" });
+    res.status(500).json({ success: false, message: "Failed to update user status" });
   }
 };

@@ -1,81 +1,85 @@
-// place order cod : /api/cod
-
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 
-
+/**
+ * Place an order with Cash on Delivery (COD)
+ * POST /api/cod
+ */
 export const placeOrderCOD = async (req, res) => {
   try {
     const { userId, items, address } = req.body;
-    if (!address || items.length === 0) {
-      res.json({ success: false, message: "invalid data" });
+
+    if (!address || !items || items.length === 0) {
+      return res.status(400).json({ success: false, message: "Invalid order data" });
     }
-    let amount = await items.reduce(async (acc, item) => {
+
+    // Calculate total amount
+    let amount = 0;
+    for (const item of items) {
       const product = await Product.findById(item.product);
-      return (await acc) + product.offerPrice * item.quantity;
-    }, 0);
+      if (!product) {
+        return res.status(404).json({ success: false, message: "Product not found" });
+      }
+      amount += product.offerPrice * item.quantity;
+    }
+
+    // Add 2% tax or fees
     amount += Math.floor(amount * 0.02);
-    await Order.create({
+
+    // Create order in DB
+    const newOrder = await Order.create({
       userId,
       items,
       amount,
       address,
       paymentType: "COD",
     });
-    res.json({ success: true, message: "order placed seuuccfyluut" });
+
+    return res.status(201).json({ success: true, message: "Order placed successfully", order: newOrder });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error("Place order error:", error);
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-
-
-// Get orders by user id : /api/order/user
-
+/**
+ * Get orders for a specific user
+ * POST /api/order/user
+ */
 export const getUserOrders = async (req, res) => {
   try {
     const { userId } = req.body;
+    if (!userId) return res.status(400).json({ success: false, message: "User ID is required" });
 
-    // پیدا کردن سفارش‌ها با شرط COD یا پرداخت شده
     const orders = await Order.find({
       userId,
       $or: [{ paymentType: "COD" }, { isPaid: true }],
     })
-      .populate("items.product address") // دقت کن اسم فیلدهای مدل
-      .sort({ createdAt: -1 }); // ترتیب از جدیدترین به قدیمی‌ترین
+      .populate("items.product address") // populate products and addresses
+      .sort({ createdAt: -1 }); // newest orders first
 
-    res.json({
-      success: true,
-      orders,
-    });
+    return res.json({ success: true, orders });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error("Get user orders error:", error);
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-
-// get all orders (sellers /admin) : /api/order/seller
-
+/**
+ * Get all orders (for sellers/admin)
+ * GET /api/order/seller
+ */
 export const getAllOrders = async (req, res) => {
   try {
-   
-
-    // پیدا کردن سفارش‌ها با شرط COD یا پرداخت شده
     const orders = await Order.find({
-      userId,
       $or: [{ paymentType: "COD" }, { isPaid: true }],
     })
-      .populate("items.product address") // دقت کن اسم فیلدهای مدل
-      .sort({ createdAt: -1 }); // ترتیب از جدیدترین به قدیمی‌ترین
+      .populate("items.product address")
+      .sort({ createdAt: -1 });
 
-    res.json({
-      success: true,
-      orders,
-    });
+    return res.json({ success: true, orders });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error("Get all orders error:", error);
+    return res.status(500).json({ success: false, message: error.message });
   }
 };

@@ -10,8 +10,6 @@ import {
 const router = express.Router();
 
 router.get("/:productId", getComments);
-
-
 router.post("/", addComment);
 router.post("/:id/reply", addReply);
 router.post("/:id/like", likeComment);

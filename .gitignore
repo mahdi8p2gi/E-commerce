@@ -1,26 +1,55 @@
+# =========================
 # Node.js
+# =========================
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# =========================
 # Environment variables
+# =========================
 .env
+.env.local
+.env.development
+.env.production
+.env.test
 
-# Build output (برای فرانت‌اند)
+# =========================
+# Build output (Frontend)
+# =========================
 build/
 dist/
 
-# سیستم‌عامل‌ها
+# =========================
+# Operating System
+# =========================
 .DS_Store
 Thumbs.db
 
-# لاگ‌ها
+# =========================
+# Logs
+# =========================
 logs/
 *.log
+pids/
+*.pid
+*.seed
+*.pid.lock
 
-# فایل‌های کش و موقت
+# =========================
+# Cache & temporary files
+# =========================
 .cache/
 tmp/
 *.temp
+*.swp
+*.swo
 
+# =========================
+# Editor
+# =========================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

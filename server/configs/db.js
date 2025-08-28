@@ -1,18 +1,22 @@
-// اتصال به دیتابیس MongoDB
 import mongoose from "mongoose";
 
-// تابع اتصال
-const connectdb = async () => {
+/**
+ * Connect to MongoDB
+ */
+const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-    console.log("✅ اتصال به MongoDB با موفقیت انجام شد");
+    if (!process.env.MONGO_URI) {
+      throw new Error("MONGO_URI is not defined in environment variables");
+    }
+
+    // Connect to MongoDB (Mongoose 8+ doesn't require useNewUrlParser or useUnifiedTopology)
+    await mongoose.connect(process.env.MONGO_URI);
+
+    console.log("✅ Successfully connected to MongoDB");
   } catch (error) {
-    console.error("datttttta baseeee errrorr", error.message);
-    process.exit(1); // اگر اتصال قطع شد، سرور رو متوقف کن
+    console.error("❌ MongoDB connection error:", error.message);
+    process.exit(1); // Stop server if DB connection fails
   }
 };
 
-export default connectdb;
+export default connectDB;

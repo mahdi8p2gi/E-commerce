@@ -14,7 +14,6 @@ router.post("/register", register);
 router.post("/login", login);
 router.get("/list", listUsers);
 router.post("/ban", toggleBanUser);
-
 router.put("/profile", updateProfile);
 
 export default router;
