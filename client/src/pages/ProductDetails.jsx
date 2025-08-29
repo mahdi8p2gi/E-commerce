@@ -51,7 +51,7 @@ const ProductDetails = () => {
           setComments(res.data.comments || []);
         }
       } catch {
-        toast.error("Failed to load comments");
+       
       }
     };
 
