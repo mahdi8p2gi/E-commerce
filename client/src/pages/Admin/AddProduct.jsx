@@ -4,7 +4,7 @@ import axios from "axios";
 import { categories } from "../../assets/assets";
 
 const AddProduct = () => {
-  const [files, setFiles] = useState([null, null, null, null]); // ۴ جای آپلود
+  const [files, setFiles] = useState([null, null, null, null]); 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -40,7 +40,7 @@ const AddProduct = () => {
       });
 
       const { data } = await axios.post(
-        `${API_URL}/product/add`,
+        `${API_URL}/api/product/add`,
         formData
       );
 

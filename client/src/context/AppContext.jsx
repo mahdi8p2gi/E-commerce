@@ -10,7 +10,8 @@ export const AppContext = createContext();
 export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const currency = process.env.REACT_APP_CURRENCY || "$";
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = "http://localhost:5000";
+
 
   // -------------------- User State --------------------
   const savedUser = JSON.parse(localStorage.getItem("user"));
@@ -28,11 +29,10 @@ export const AppContextProvider = ({ children }) => {
   // -------------------- Fetch Products --------------------
   const fetchProducts = async () => {
     try {
-      console.log("Fetching products from:", `${API_URL}/api/list`);
-      const { data } = await axios.get(`${API_URL}/api/list`, {
+      console.log("Fetching products from:", `${API_URL}/api/product/list`);
+      const { data } = await axios.get(`${API_URL}/api/product/list`, {
         withCredentials: true,
       });
-
       if (data.success && Array.isArray(data.products)) {
         // Normalize product IDs & images
         const normalizedProducts = data.products.map((p) => ({

@@ -8,12 +8,10 @@ const Cart = () => {
     products,
     currency,
     cartItem,
-    removeFromCart,
-    getCartCount,
     updateCartItem,
-    navigate,
+    getCartCount,
     getCartAmount,
-    primary,
+    navigate,
   } = useAppContext();
 
   const [cartArray, setCartArray] = useState([]);
@@ -22,7 +20,7 @@ const Cart = () => {
   const [selectedAddress, setSelectedAddress] = useState(dummyAddress[0]);
   const [paymentOption, setPaymentOption] = useState("COD");
 
-  // فرم دهی آرایه cartArray بر اساس cartItem
+  // ساخت آرایه cartArray بر اساس cartItem
   useEffect(() => {
     if (products.length && cartItem) {
       const tempArray = Object.entries(cartItem)
@@ -57,72 +55,82 @@ const Cart = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-10 mt-16">
-      {/* سبد خرید */}
+    <div className="flex flex-col lg:flex-row gap-10 mt-16 px-4 lg:px-0">
+      {/* Cart Items */}
       <div className="flex-1 max-w-4xl">
         <h1 className="mb-6 text-3xl font-semibold flex items-center justify-between">
-          Shopping Cart <span className="text-sm text-primary">{getCartCount()}</span>
+          Shopping Cart
+          <span className="text-sm text-primary">{getCartCount()}</span>
         </h1>
 
-        {/* جدول سبد خرید */}
-        <div className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 font-medium text-sm md:text-base border-b border-gray-300 pb-2">
+        {/* Table Header */}
+        <div className="hidden md:grid grid-cols-[2fr_1fr_1fr] text-gray-500 font-medium text-sm md:text-base border-b border-gray-300 pb-2">
           <span>Product Details</span>
           <span className="text-center">Subtotal</span>
           <span className="text-center">Action</span>
         </div>
 
-        {cartArray.map((product) => (
-          <div
-            key={product._id}
-            className="grid grid-cols-[2fr_1fr_1fr] items-center py-4 border-b border-gray-200 text-gray-700"
-          >
-            <div className="flex items-center gap-4">
-              <div
-                onClick={() => navigate(`/products/${product.category}/${product._id}`)}
-                className="w-24 h-24 overflow-hidden border rounded cursor-pointer"
-              >
-                <img
-                  src={product.image[0]}
-                  alt={product.name}
-                  className="w-full h-full object-cover transition-transform hover:scale-105"
-                />
-              </div>
-              <div className="flex flex-col">
-                <p className="font-semibold truncate md:block">{product.name}</p>
-                <div className="flex items-center gap-2 mt-1 text-gray-500/80">
-                  <span>Size: {product.size || "N/A"}</span>
-                  <div className="flex items-center gap-1">
-                    <span>Qty:</span>
-                    <select
-                      className="outline-none px-2 py-1 border border-gray-300 rounded"
-                      value={product.quantity}
-                      onChange={(e) =>
-                        handleQuantityChange(product._id, e.target.value)
-                      }
-                    >
-                      {[1, 2, 3, 4, 5].map((num) => (
-                        <option key={num} value={num}>
-                          {num}
-                        </option>
-                      ))}
-                    </select>
+        {/* Cart Items List */}
+        <div className="flex flex-col gap-4">
+          {cartArray.map((product) => (
+            <div
+              key={product._id}
+              className="grid md:grid-cols-[2fr_1fr_1fr] items-center gap-4 py-4 border-b border-gray-200 text-gray-700"
+            >
+              <div className="flex items-center gap-4">
+                <div
+                  onClick={() =>
+                    navigate(`/products/${product.category}/${product._id}`)
+                  }
+                  className="w-20 h-20 md:w-24 md:h-24 overflow-hidden border rounded cursor-pointer flex-shrink-0"
+                >
+                  <img
+                    src={product.image[0]}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform hover:scale-105"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <p className="font-semibold truncate md:block">{product.name}</p>
+                  <div className="flex items-center gap-2 mt-1 text-gray-500/80">
+                    <span>Size: {product.size || "N/A"}</span>
+                    <div className="flex items-center gap-1">
+                      <span>Qty:</span>
+                      <select
+                        className="outline-none px-2 py-1 border border-gray-300 rounded"
+                        value={product.quantity}
+                        onChange={(e) =>
+                          handleQuantityChange(product._id, e.target.value)
+                        }
+                      >
+                        {[1, 2, 3, 4, 5].map((num) => (
+                          <option key={num} value={num}>
+                            {num}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              {/* Subtotal */}
+              <p className="text-center font-medium">
+                {currency} {(product.offerPrice * product.quantity).toFixed(2)}
+              </p>
+
+              {/* Remove Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={() => handleRemoveItem(product._id)}
+                  className="p-2 bg-red-500 hover:bg-red-600 text-white rounded transition-all"
+                >
+                  Remove
+                </button>
+              </div>
             </div>
-            <p className="text-center font-medium">
-              {currency} {(product.offerPrice * product.quantity).toFixed(2)}
-            </p>
-            <div className="flex justify-center">
-              <button
-                onClick={() => handleRemoveItem(product._id)}
-                className="p-2 bg-red-500 hover:bg-red-600 text-white rounded transition-all"
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
 
         <button
           onClick={() => navigate("/")}
@@ -132,10 +140,11 @@ const Cart = () => {
         </button>
       </div>
 
-      {/* خلاصه سفارش */}
+      {/* Order Summary */}
       <div className="max-w-md w-full bg-gray-50 p-6 rounded-lg border border-gray-200 flex flex-col gap-4">
         <h2 className="text-xl font-semibold">Order Summary</h2>
 
+        {/* Delivery Address */}
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium uppercase">Delivery Address</span>
           <div className="relative">
@@ -150,6 +159,7 @@ const Cart = () => {
             >
               Change
             </button>
+
             {showAddress && (
               <div className="absolute z-10 w-full mt-2 bg-white border border-gray-300 rounded shadow-lg text-sm">
                 {address.map((item, idx) => (
@@ -172,6 +182,7 @@ const Cart = () => {
           </div>
         </div>
 
+        {/* Payment Method */}
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium uppercase">Payment Method</span>
           <select
@@ -184,6 +195,7 @@ const Cart = () => {
           </select>
         </div>
 
+        {/* Price Summary */}
         <div className="border-t border-gray-300 pt-4 flex flex-col gap-2 text-gray-700">
           <div className="flex justify-between">
             <span>Price</span>
@@ -203,9 +215,7 @@ const Cart = () => {
           </div>
         </div>
 
-        <button
-          className={`w-full py-3 mt-4 font-medium text-white rounded bg-primary hover:bg-primary-dull transition-all`}
-        >
+        <button className="w-full py-3 mt-4 font-medium text-white rounded bg-primary hover:bg-primary-dull transition-all">
           Place Order
         </button>
       </div>

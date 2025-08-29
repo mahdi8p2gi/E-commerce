@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import ProductCard from "../components/ProductCard";
 import ScrollToTopButton from "../components/ScrollToTopButton";
-import Pagination from "../components/Pagination"; // کامپوننت Pagination
+import Pagination from "../components/Pagination"; 
 
 const AllProducts = ()=> {
   const { products, searchQuery } = useAppContext();
@@ -47,7 +47,7 @@ const AllProducts = ()=> {
 
   return (
     <div className="flex flex-col px-4 mt-16 md:px-8 lg:px-16">
-      <div className="flex flex-col items-start">
+      <div className="flex flex-col items-start mb-8">
         <p className="text-2xl font-semibold">All Products</p>
         <div className="w-16 h-0.5 bg-primary rounded-full mt-1"></div>
       </div>
@@ -64,14 +64,14 @@ const AllProducts = ()=> {
         </div>
       )}
 
-      {/* کامپوننت Pagination */}
+     
       {totalPages > 1 && (
         <div className="mt-16">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-            primary="primary" // رنگ اصلی پروژه
+            primary="primary" 
           />
         </div>
       )}

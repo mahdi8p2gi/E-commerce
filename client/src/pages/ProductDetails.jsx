@@ -51,13 +51,13 @@ const ProductDetails = () => {
           setComments(res.data.comments || []);
         }
       } catch {
-        toast.error("Failed to load comments");
+
       }
     };
 
     fetchComments();
   }, [id]);
-
+  const randomRating = Math.floor(Math.random() * 5) + 1;
   const toggleWishlist = () => setIsLikedIcon((prev) => !prev);
 
   const handleCommentSubmit = async (e) => {
@@ -174,9 +174,17 @@ const ProductDetails = () => {
             <p className="mt-1 text-sm text-gray-500 capitalize">{product?.category}</p>
             <div className="flex items-center gap-1 mt-2">
               {[...Array(5)].map((_, i) => (
-                <span key={i}>{i < (product?.rating || 0) ? "⭐" : "☆"}</span>
+                <span
+                  key={i}
+                  className={`text-lg sm:text-xl transition-colors duration-300 ${i < randomRating ? "text-yellow-400" : "text-gray-300"
+                    } hover:text-yellow-500 cursor-pointer`}
+                >
+                  ★
+                </span>
               ))}
-              <span className="ml-2 text-gray-500">({product?.rating || 0})</span>
+              <span className="ml-2 text-sm sm:text-base text-gray-500">
+                ({randomRating})
+              </span>
             </div>
 
             <div className="mt-4">
@@ -240,28 +248,29 @@ const ProductDetails = () => {
         {/* فرم ثبت کامنت */}
         <form
           onSubmit={handleCommentSubmit}
-          className="flex mt-4 space-x-2"
+          className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4 w-full"
         >
           <input
             type="text"
-            className="flex-1 px-4 py-2 border rounded focus:outline-primary"
+            className="flex-1 px-3 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:outline-none placeholder:text-gray-400 transition-all"
             placeholder="Write your comment..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           />
           <button
             type="submit"
-            className="px-4 py-2 text-white rounded bg-primary hover:bg-primary-dull transition-all"
+            className="w-full sm:w-auto px-4 py-2 sm:py-3 text-sm sm:text-base text-white rounded-md bg-primary hover:bg-primary-dull transition-all shadow-md hover:shadow-lg"
           >
             Submit
           </button>
         </form>
 
+
         {/* commnets*/}
         <div className="mt-6 space-y-6">
           {comments.length === 0 ? (
             <p className="text-gray-500 mt-4 text-center">
-              There is no comment fro this product yet            </p>
+              There is no comment for this product yet            </p>
           ) : (
             [...comments]
               .sort((a, b) =>

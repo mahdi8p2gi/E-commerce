@@ -53,9 +53,6 @@ function BestSeller() {
             className="flex justify-center rounded-xl overflow-hidden"
             variants={itemVariants}
             whileHover="hover"
-            style={{
-              background: "linear-gradient(145deg, #f0f8ff, #e0f7fa)", // Cool gradient background
-            }}
           >
             <ProductCard product={product} />
           </motion.div>
