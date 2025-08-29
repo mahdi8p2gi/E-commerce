@@ -3,10 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 
-// -------------------- Axios Defaults --------------------
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
-
 // -------------------- Context Creation --------------------
 export const AppContext = createContext();
 
@@ -14,6 +10,7 @@ export const AppContext = createContext();
 export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const currency = process.env.REACT_APP_CURRENCY || "$";
+  const API_URL = process.env.REACT_APP_API_URL;
 
   // -------------------- User State --------------------
   const savedUser = JSON.parse(localStorage.getItem("user"));
@@ -24,40 +21,29 @@ export const AppContextProvider = ({ children }) => {
   // -------------------- Product & Cart State --------------------
   const [products, setProducts] = useState([]);
   const [cartItem, setCartItem] = useState({});
+  const [wishlist, setWishlist] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [wishlist, setWishlist] = useState([]);
 
   // -------------------- Fetch Products --------------------
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get("/api/product/list");
-      if (data.success && Array.isArray(data.products)) {
-        const extractId = (raw) => {
-          if (!raw) return undefined;
-          if (typeof raw === "string") return raw;
-          if (typeof raw === "number") return String(raw);
-          if (typeof raw === "object") {
-            if (typeof raw.$oid === "string") return raw.$oid;
-            if (typeof raw.oid === "string") return raw.oid;
-            if (typeof raw.toHexString === "function") return raw.toHexString();
-            if (typeof raw.toString === "function") {
-              const val = raw.toString();
-              if (val && !val.startsWith("[")) return val;
-            }
-          }
-          return undefined;
-        };
+      console.log("Fetching products from:", `${API_URL}/api/list`);
+      const { data } = await axios.get(`${API_URL}/api/list`, {
+        withCredentials: true,
+      });
 
+      if (data.success && Array.isArray(data.products)) {
+        // Normalize product IDs & images
         const normalizedProducts = data.products.map((p) => ({
           ...p,
-          _id: extractId(p?._id) || extractId(p?.id),
-          offerPrice: p?.offerPrice ?? p?.price ?? 0,
-          image: Array.isArray(p?.image) ? p.image : p?.image ? [p.image] : [],
-          category: (p?.category || "").toLowerCase(),
+          _id: p._id?.$oid || p._id || p.id,
+          offerPrice: p.offerPrice ?? p.price ?? 0,
+          image: Array.isArray(p.image) ? p.image : p.image ? [p.image] : [],
+          category: (p.category || "").toLowerCase(),
         }));
-
         setProducts(normalizedProducts);
+        console.log("Products fetched:", normalizedProducts.length);
       } else {
         setProducts([]);
         toast.error(data.message || "Failed to fetch products");
@@ -65,6 +51,7 @@ export const AppContextProvider = ({ children }) => {
     } catch (error) {
       setProducts([]);
       toast.error(error.message || "Failed to fetch products");
+      console.error("Fetch products error:", error);
     }
   };
 
@@ -134,7 +121,11 @@ export const AppContextProvider = ({ children }) => {
     const syncCart = async () => {
       if (!user) return;
       try {
-        const { data } = await axios.post("/api/cart/update", { cartItems: cartItem });
+        const { data } = await axios.post(
+          `${API_URL}/api/cart/update`,
+          { cartItems: cartItem },
+          { withCredentials: true }
+        );
         if (!data.success) toast.error(data.message);
       } catch (err) {
         toast.error(err.message);

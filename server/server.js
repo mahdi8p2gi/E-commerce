@@ -42,7 +42,7 @@ app.use(cors({
   origin: [
     "http://localhost:3000",                  // لوکال هاست توسعه
     "http://localhost:3001",                  // اگر روی پورت دیگه تست میکنی
-    "https://e-commerce-frontend.onrender.com" // فرانت روی Render
+    "https://e-commerce-client-27qd.onrender.com" // فرانت روی Render
   ],
   credentials: true,
 }));
