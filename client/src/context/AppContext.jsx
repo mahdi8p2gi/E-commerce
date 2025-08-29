@@ -10,7 +10,7 @@ export const AppContext = createContext();
 export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const currency = process.env.REACT_APP_CURRENCY || "$";
-  const API_URL = "http://localhost:5000";
+  const API_URL = "https://e-commerce-backend-0zqg.onrender.com";
 
 
   // -------------------- User State --------------------
