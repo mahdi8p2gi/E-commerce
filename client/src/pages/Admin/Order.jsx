@@ -5,13 +5,13 @@ import toast from "react-hot-toast";
 
 const Order = () => {
     const boxIcon = "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/e-commerce/boxIcon.svg";
-
+const API_URL = process.env.REACT_APP_API_URL;
     const { currency } = useAppContext();
     const [orders, setOrders] = useState([]);
 
     const fetchOrders = async () => {
         try {
-            const { data } = await axios.get("http://localhost:5000/api/order/seller");
+            const { data } = await axios.get(`${API_URL}/api/order/seller`);
             if (data.success) {
                 setOrders(data.orders);
             } else {

@@ -38,13 +38,14 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Enable CORS for frontend (adjust the origin for production)
-app.use(
-  cors({
-    origin: "http://localhost:3000", // frontend URL
-    credentials: true, // allow cookies
-  })
-);
-
+app.use(cors({
+  origin: [
+    "http://localhost:3000",                  // لوکال هاست توسعه
+    "http://localhost:3001",                  // اگر روی پورت دیگه تست میکنی
+    "https://e-commerce-frontend.onrender.com" // فرانت روی Render
+  ],
+  credentials: true,
+}));
 // ----------------- Routes ----------------- //
 app.use("/api/users", userRouter);
 app.use("/api/cart", cartRouter);

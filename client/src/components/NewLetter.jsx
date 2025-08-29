@@ -27,9 +27,9 @@ const NewsLetter = () => {
         Subscribe to get the latest offers, new arrivals, and exclusive discounts
       </p>
 
-      <form
+      {/* <form
         onSubmit={handleSubscribe}
-        className="flex w-full max-w-2xl h-12 md:h-14"
+        className="flex  max-w-2xl h-12 md:h-14"
       >
         <input
           type="email"
@@ -41,11 +41,11 @@ const NewsLetter = () => {
         />
         <button
           type="submit"
-          className="px-6 md:px-10 bg-primary hover:bg-primary-dull duration-300 text-white font-medium rounded-r-md transition-all"
+          className="px-2 md:px-10 bg-primary hover:bg-primary-dull duration-300 text-white font-medium rounded-r-md transition-all"
         >
           Subscribe
         </button>
-      </form>
+      </form> */}
     </div>
   );
 };

@@ -9,7 +9,7 @@ const Profile = () => {
   const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-
+  const API_URL = process.env.REACT_APP_API_URL;
   const orders = [
     {
       id: "123",
@@ -37,11 +37,13 @@ const Profile = () => {
     try {
       const userId = "64235a1e6b4c7a1234567890"; // Example ObjectId
 
-      const response = await fetch("http://localhost:5000/api/users/profile", {
+      const response = await fetch(`${API_URL}/api/users/profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, username: name, email }),
+        credentials: "include",
       });
+
 
       const data = await response.json();
       if (!response.ok) {

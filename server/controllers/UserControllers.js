@@ -14,7 +14,9 @@ export const register = async (req, res) => {
 
     // Validate required fields
     if (!username || !email || !password) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
     }
 
     username = username.toLowerCase().trim();
@@ -28,7 +30,9 @@ export const register = async (req, res) => {
       ],
     });
     if (existingUser) {
-      return res.status(409).json({ success: false, message: "Email or username already exists" });
+      return res
+        .status(409)
+        .json({ success: false, message: "Email or username already exists" });
     }
 
     // Hash password
@@ -61,14 +65,21 @@ export const register = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
-      user: { id: newUser._id, username: newUser.username, email: newUser.email, role: newUser.role },
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+        role: newUser.role,
+      },
       token,
     });
   } catch (error) {
     console.error("Register error:", error);
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
-      return res.status(409).json({ success: false, message: `${field} already exists` });
+      return res
+        .status(409)
+        .json({ success: false, message: `${field} already exists` });
     }
     return res.status(500).json({ success: false, message: "Server error" });
   }
@@ -80,7 +91,10 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     let { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
+    if (!email || !password)
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
 
     email = email.toLowerCase().trim();
 
@@ -88,20 +102,30 @@ export const login = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Incorrect password" });
+    if (!isMatch)
+      return res.status(401).json({ message: "Incorrect password" });
 
-    const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production", // لوکال false، Render true
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(200).json({
       message: "Login successful",
-      user: { id: user._id, username: user.username, email: user.email, role: user.role },
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
       token,
     });
   } catch (error) {
@@ -152,7 +176,9 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID" });
 
     if (!username && !email)
-      return res.status(400).json({ message: "Username or email must be provided" });
+      return res
+        .status(400)
+        .json({ message: "Username or email must be provided" });
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -160,7 +186,8 @@ export const updateProfile = async (req, res) => {
       { new: true }
     );
 
-    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+    if (!updatedUser)
+      return res.status(404).json({ message: "User not found" });
 
     res.status(200).json(updatedUser);
   } catch (error) {
@@ -174,9 +201,17 @@ export const updateProfile = async (req, res) => {
  */
 export const listUsers = async (req, res) => {
   try {
-    const users = await User.find({}, {
-      username: 1, email: 1, role: 1, avatar: 1, isBanned: 1, createdAt: 1
-    }).sort({ createdAt: -1 });
+    const users = await User.find(
+      {},
+      {
+        username: 1,
+        email: 1,
+        role: 1,
+        avatar: 1,
+        isBanned: 1,
+        createdAt: 1,
+      }
+    ).sort({ createdAt: -1 });
     res.json({ success: true, users });
   } catch (error) {
     console.error(error);
@@ -190,12 +225,20 @@ export const listUsers = async (req, res) => {
 export const toggleBanUser = async (req, res) => {
   try {
     const { userId, isBanned } = req.body;
-    if (!userId) return res.status(400).json({ success: false, message: "User ID is required" });
+    if (!userId)
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID is required" });
 
     await User.findByIdAndUpdate(userId, { isBanned: !!isBanned });
-    res.json({ success: true, message: isBanned ? "User banned" : "User unbanned" });
+    res.json({
+      success: true,
+      message: isBanned ? "User banned" : "User unbanned",
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Failed to update user status" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to update user status" });
   }
 };

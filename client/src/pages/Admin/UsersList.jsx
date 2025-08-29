@@ -5,11 +5,11 @@ const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const API_URL = process.env.REACT_APP_API_URL;
   useEffect(() => {
     const load = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/users/list");
+        const { data } = await axios.get(`${API_URL}/api/users/list`);
         if (data.success) setUsers(data.users);
         else setError(data.message || "Failed to load users");
       } catch (err) {
@@ -35,7 +35,7 @@ const UsersList = () => {
 
   return (
     <div className="p-4 md:p-6">
-      
+
       <h2 className="mb-4 text-lg font-semibold">Users</h2>
       <div className="overflow-x-auto bg-white border rounded-md border-gray-300/70">
         <table className="w-full text-sm">
@@ -62,11 +62,11 @@ const UsersList = () => {
                     className={`px-3 py-1 text-xs rounded ${u.isBanned ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}
                     onClick={async () => {
                       try {
-                        const { data } = await axios.post("http://localhost:5000/api/users/ban", { userId: u._id, isBanned: !u.isBanned });
+                        const { data } = await axios.post(`${API_URL}/api/users/ban`, { userId: u._id, isBanned: !u.isBanned });
                         if (data.success) {
                           setUsers(prev => prev.map(x => x._id === u._id ? { ...x, isBanned: !u.isBanned } : x));
                         }
-                      } catch (err) {}
+                      } catch (err) { }
                     }}
                   >
                     {u.isBanned ? "Unban" : "Ban"}

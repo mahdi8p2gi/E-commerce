@@ -11,7 +11,7 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { products, addToCart } = useAppContext();
-
+  const API_URL = process.env.REACT_APP_API_URL;
   const [product, setProduct] = useState(null);
   const [thumbnail, setThumbnail] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -40,11 +40,11 @@ const ProductDetails = () => {
 
     const fetchComments = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/comments/${id}`)
+        const res = await axios.get(`${API_URL}/api/comments/${id}`)
           ;
 
         if (res.data.message) {
-          // اگر پیام برگشت، آرایه خالی قرار بده
+
           setComments([]);
           toast.info(res.data.message);
         } else {
@@ -65,7 +65,7 @@ const ProductDetails = () => {
     if (!newComment.trim()) return toast.error("Please enter your comment!");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/comments", {
+      const res = await axios.post(`${API_URL}/api/comments`, {
         productId: id,
         user: "Guest",
         text: newComment.trim(),
@@ -81,10 +81,12 @@ const ProductDetails = () => {
   const handleReply = async (commentId) => {
     if (!replyText.trim()) return toast.error("Reply cannot be empty!");
     try {
-      const res = await axios.post(`http://localhost:5000/api/comments/${commentId}/reply`, {
+      const res = await axios.post(`${API_URL}/api/comments/${commentId}/reply`, {
         user: "Guest",
         text: replyText.trim(),
       });
+
+
       setComments((prev) => prev.map((c) => (c._id === commentId ? res.data : c)));
       setReplyText("");
       setReplyingTo(null);
@@ -96,7 +98,7 @@ const ProductDetails = () => {
 
   const handleLike = async (commentId) => {
     try {
-      const res = await axios.post(`http://localhost:5000/api/comments/${commentId}/like`);
+      const res = await axios.post(`${API_URL}/api/comments/${commentId}/like`);
 
       setComments((prev) => prev.map((c) => (c._id === commentId ? res.data : c)));
     } catch {
@@ -106,7 +108,7 @@ const ProductDetails = () => {
 
   const handleDislike = async (commentId) => {
     try {
-      const res = await axios.post(`http://localhost:5000/api/comments/${commentId}/dislike`);
+      const res = await axios.post(`${API_URL}/api/comments/${commentId}/dislike`);
 
       setComments((prev) => prev.map((c) => (c._id === commentId ? res.data : c)));
     } catch {

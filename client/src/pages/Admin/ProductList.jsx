@@ -7,7 +7,7 @@ import { useAppContext } from "../../context/AppContext";
 const ProductList = () => {
   const { productAdded } = useOutletContext();
   const { currency, fetchProducts, products } = useAppContext();
-
+const API_URL = process.env.REACT_APP_API_URL;
   // Filters
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [stockFilter, setStockFilter] = useState("all"); // all | in | out
@@ -19,7 +19,7 @@ const ProductList = () => {
 
   const toggleStock = async (id, inStock) => {
     try {
-      const { data } = await axios.post('http://localhost:5000/api/product/stock', { id, inStock })
+      const { data } = await axios.post(`${API_URL}/api/product/stock`, { id, inStock })
       if (data.success) {
         fetchProducts()
         toast.success(data.message)

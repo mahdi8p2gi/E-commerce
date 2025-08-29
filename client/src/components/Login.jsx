@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google"; // Google login component
 import { useAppContext } from "../context/AppContext";
+import axios from "axios";
 
 const Login = () => {
   const { setShowUserLogin, setUser } = useAppContext();
@@ -14,7 +14,7 @@ const Login = () => {
   const [show, setShow] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const API_URL = process.env.REACT_APP_API_URL;
   // Reset form fields
   const resetForm = () => {
     setName("");
@@ -36,71 +36,44 @@ const Login = () => {
       setLoading(true);
 
       const endpoint = state === "login" ? "/api/users/login" : "/api/users/register";
-      const payload =
-        state === "login"
-          ? { email, password }
-          : { username: name, email, password };
+      const payload = state === "login"
+        ? { email, password }
+        : { username: name, email, password };
 
       try {
-        const response = await fetch(`http://localhost:5000${endpoint}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-          credentials: "include",
-        });
+        const response = await axios.post(
+          `${API_URL}${endpoint}`,
+          payload,
+          { withCredentials: true } // جایگزین credentials
+        );
 
-        const data = await response.json();
+        const data = response.data;
+
+        if (!data.success) {
+          return setError(data.message || "Something went wrong.");
+        }
 
         setUser({
-          id: data.user.id || "",
-          username: data.user.username || "",
-          email: data.user.email || "",
-          role: data.user.role,
+          id: data.user?.id || "",
+          username: data.user?.username || "",
+          email: data.user?.email || "",
+          role: data.user?.role || "",
         });
 
         navigate("/");
         resetForm();
         setShowUserLogin(false);
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || err.message || "Network error");
       } finally {
         setLoading(false);
       }
     },
-    [state, name, email, password, setUser, setShowUserLogin, navigate]
+    [state, name, email, password, setUser, setShowUserLogin, navigate, API_URL]
   );
 
-  // Handle Google login
-  const handleGoogleLogin = async (response) => {
-    const credential = response.credential;
 
-    try {
-      const res = await fetch("http://localhost:5000/api/users/google-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: credential }),
-        credentials: "include",
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setUser({
-          id: data.user.id,
-          username: data.user.username,
-          email: data.user.email,
-          role: data.user.role,
-        });
-
-        navigate("/");
-        setShowUserLogin(false);
-      } else {
-        setError("Google login failed.");
-      }
-    } catch (error) {
-      setError("Error during Google login.");
-    }
-  };
+ 
 
   if (!show) return null;
 
@@ -195,16 +168,10 @@ const Login = () => {
           {loading
             ? "Please wait..."
             : state === "register"
-            ? "Create Account"
-            : "Login"}
+              ? "Create Account"
+              : "Login"}
         </button>
 
-        {/* Google login button */}
-        <GoogleLogin
-          onSuccess={handleGoogleLogin}
-          onError={() => setError("Error during Google login")}
-          useOneTap
-        />
       </form>
     </div>
   );
