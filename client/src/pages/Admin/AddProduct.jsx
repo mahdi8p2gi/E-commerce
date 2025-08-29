@@ -40,7 +40,7 @@ const AddProduct = () => {
       });
 
       const { data } = await axios.post(
-        `${API_URL}/product/add`,
+        `${API_URL}/api/product/add`,
         formData
       );
 
