@@ -1,189 +1,296 @@
-﻿# E-commerce
+# 🛒 Green Cart
 
-**Green Cart** – An online shopping platform built with **MERN Stack** (MongoDB, Express.js, React.js, Node.js) with user authentication, cart, orders, comments, and seller/admin functionalities.
+<div align="center">
 
-Live Demo: [https://e-commerce-client-27qd.onrender.com](https://e-commerce-client-27qd.onrender.com)
+# Green Cart
 
----
+### Modern MERN Stack E-commerce Platform
 
-## 🚀 Features🛒
+A full-featured e-commerce application built with the **MERN Stack** featuring secure authentication, seller dashboard, product management, shopping cart, comments, wishlist, order management, and a responsive modern UI.
 
-* 🛒 Browse products by category
-* ❤️ Wishlist & Like/Dislike products
-* 💬 User comments with replies
-* 🏷️ Product offers & discounts
-* 🏠 Multiple addresses for shipping
-* 💳 Place COD orders
-* 🔒 Secure JWT-based authentication
-* 🖥️ Seller/Admin dashboard
-* ☁️ Cloudinary integration for product images
-* 📦 Cart management
+### Tech Stack
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge\&logo=react\&logoColor=61DAFB)
+![NodeJS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge\&logo=node.js\&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge\&logo=express\&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge\&logo=mongodb\&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38BDF8?style=for-the-badge\&logo=tailwind-css\&logoColor=white)
 
 ---
 
-## 📦 Tech Stack
+### Live Demo
 
-* **Frontend:** React.js, TailwindCSS, React Router, Context API
-* **Backend:** Node.js, Express.js
-* **Database:** MongoDB (Atlas)
-* **Authentication:** JWT (cookies + localStorage)
-* **File Upload:** Multer & Cloudinary
-* **Real-time Updates:** Socket.io (future support)
+https://e-commerce-client-27qd.onrender.com
+
+</div>
 
 ---
 
-## 📁 Folder Structure
+# ✨ Features
+
+### 👤 Authentication
+
+* Secure JWT Authentication
+* Login & Register
+* Persistent Sessions
+* Profile Management
+
+---
+
+### 🛍️ Shopping
+
+* Browse Products
+* Categories
+* Product Details
+* Wishlist
+* Like / Dislike
+* Product Discounts
+* Stock Management
+
+---
+
+### 🛒 Cart
+
+* Add to Cart
+* Update Quantity
+* Remove Products
+* Real-time Cart
+
+---
+
+### 💳 Orders
+
+* Cash On Delivery
+* Order History
+* Order Tracking
+* Seller Order Management
+
+---
+
+### 💬 Comments
+
+* Product Reviews
+* Nested Replies
+* Like / Dislike Comments
+
+---
+
+### 📍 Address
+
+* Multiple Addresses
+* Shipping Address Selection
+
+---
+
+### 👨‍💼 Seller Dashboard
+
+* Product Management
+* Image Upload (Cloudinary)
+* Inventory Control
+* Order Management
+
+---
+
+### ☁️ Cloud Integration
+
+* Cloudinary Image Upload
+* Optimized Images
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+* React.js
+* React Router
+* Context API
+* TailwindCSS
+* Axios
+
+## Backend
+
+* Node.js
+* Express.js
+* JWT Authentication
+* Multer
+* Cloudinary
+
+## Database
+
+* MongoDB Atlas
+* Mongoose
+
+---
+
+# 📂 Project Structure
 
 ```text
-Green-Cart/
-├─ client/ 💻
-│  ├─ public/ 🌟
-│  ├─ src/
-│  │  ├─ assets/ 🖼️
-│  │  ├─ components/ 🧩
-│  │  ├─ context/ 🌍
-│  │  ├─ pages/ 📄
-│  │  ├─ routes/ 🛣️
-│  │  ├─ App.jsx 🚪
-│  │  └─ index.jsx ⚡
-│  ├─ package.json 📦
-│  └─ .gitignore ❌
-├─ server/ 🌐
-│  ├─ controllers/ 📝
-│  ├─ models/ 💾
-│  ├─ routes/ 🌐
-│  ├─ configs/ 🔧
-│  ├─ middleware/ 🛡️
-│  ├─ server.js 🚀
-│  ├─ package.json 📦
-│  └─ .gitignore ❌
-├─ .env
-├─ .gitignore ❌
-└─ README.md 📘
+Green-Cart
+│
+├── client
+│   ├── src
+│   │   ├── assets
+│   │   ├── components
+│   │   ├── context
+│   │   ├── pages
+│   │   ├── routes
+│   │   └── App.jsx
+│   └── package.json
+│
+├── server
+│   ├── controllers
+│   ├── middleware
+│   ├── models
+│   ├── routes
+│   ├── configs
+│   └── server.js
+│
+└── README.md
 ```
 
 ---
 
-## 🛠️ Installation & Setup
+# ⚙️ Installation
 
-### 1. Clone the repository
+## Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/green-cart.git
-cd green-cart
+git clone https://github.com/mahdi8p2gi/E-commerce.git
 ```
 
-### 2. Backend Setup
+```bash
+cd E-commerce
+```
+
+---
+
+## Backend
 
 ```bash
 cd server
 npm install
 ```
 
-Create a `.env` file in `/server`:
+Create `.env`
 
 ```env
 PORT=5000
-MONGO_URI=your_mongodb_atlas_connection
-JWT_SECRET=your_jwt_secret
-SELLER_EMAIL=example@seller.com
-SELLER_PASSWORD=yourpassword
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+
+MONGO_URI=
+
+JWT_SECRET=
+
+SELLER_EMAIL=
+
+SELLER_PASSWORD=
+
+CLOUDINARY_CLOUD_NAME=
+
+CLOUDINARY_API_KEY=
+
+CLOUDINARY_API_SECRET=
 ```
 
-Start the backend:
+Start Server
 
 ```bash
 npm run dev
 ```
 
-### 3. Frontend Setup
+---
+
+## Frontend
 
 ```bash
-cd ../client
+cd client
 npm install
 npm start
 ```
 
-Runs on `http://localhost:3000` by default.
-
 ---
 
-## 🔑 API Endpoints
+# 📡 API Overview
 
-### User
+## Authentication
 
-* `POST /api/users/register` → Register a user
-* `POST /api/users/login` → Login user
-* `POST /api/users/logout` → Logout user
-* `PUT /api/users/updateProfile` → Update user profile
+```
+POST /api/users/register
+POST /api/users/login
+POST /api/users/logout
+PUT  /api/users/updateProfile
+```
 
-### Seller/Admin
+## Products
 
-* `POST /api/seller/login` → Login seller
-* `POST /api/seller/logout` → Logout seller
-* `GET /api/seller/is-auth` → Check seller auth
+```
+GET  /api/product/list
+POST /api/product/add
+POST /api/product/id
+POST /api/product/stock
+```
 
-### Products
+## Orders
 
-* `POST /api/product/add` → Add product
-* `GET /api/product/list` → List all products
-* `POST /api/product/id` → Get single product by ID
-* `POST /api/product/stock` → Change stock status
+```
+POST /api/cod
+POST /api/order/user
+GET  /api/order/seller
+```
 
-### Orders
+## Comments
 
-* `POST /api/cod` → Place COD order
-* `POST /api/order/user` → Get user orders
-* `GET /api/order/seller` → Get all orders for seller/admin
+```
+GET  /api/comments/:productId
+POST /api/comments
+POST /api/comments/:id/reply
+POST /api/comments/:id/like
+POST /api/comments/:id/dislike
+```
 
-### Comments
+## Cart
 
-* `GET /api/comments/:productId` → Get comments
-* `POST /api/comments` → Add comment
-* `POST /api/comments/:id/reply` → Reply to comment
-* `POST /api/comments/:id/like` → Like comment
-* `POST /api/comments/:id/dislike` → Dislike comment
+```
+POST /api/cart/update
+```
 
-### Cart
+## Address
 
-* `POST /api/cart/update` → Update user cart
+```
+POST /api/address/add
+POST /api/address/get
+```
 
-### Address
 
-* `POST /api/address/add` → Add address
-* `POST /api/address/get` → Get user addresses
 
----
-
-## 💡 Contribution
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Commit changes: `git commit -m "Add new feature"`
-4. Push branch: `git push origin feature/my-feature`
-5. Open a pull request
-
----
-
-## 🛠️ Developer Info
+# 👨‍💻 Developer
 
 **Mahdi Karimi**
 
-* GitHub: [https://github.com/mahdi8p2gi](https://github.com/mahdi8p2gi)
-* Email: [mahdi.karimi@example.com](mailto:mahdi.karimi@example.com)
+GitHub
+
+https://github.com/mahdi8p2gi
+
+Email
+
+[themahdikga@gmail.com](mailto:themahdikga@gmail.com)
 
 ---
 
-## 📞 Support
+# 🤝 Contributing
 
-* Email: [themahdikga@gmail.com](mailto:themahdikga@gmail.com)
-* GitHub Issues: [https://github.com/mahdi8p2gi/E-commerce/issues](https://github.com/mahdi8p2gi/E-commerce/issues)
+Contributions are welcome.
+
+Fork → Create Branch → Commit → Push → Pull Request
 
 ---
 
-## ⚡ License
+# ⭐ Support
+
+If you like this project, don't forget to give it a **Star ⭐**
+
+---
+
+# 📜 License
 
 MIT License
